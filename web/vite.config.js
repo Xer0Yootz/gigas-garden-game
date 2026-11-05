@@ -5,14 +5,15 @@ import path from 'node:path';
 
 const GATE_TAG = /<script\b[^>]*\bsrc="[^"]*auth-gate\.js"[^>]*><\/script>/i;
 const AUTH_MODE = (process.env.VITE_AUTH_MODE || 'server').toLowerCase();
-// Pages behind the sign-in gate: the Gigas Garden game and its My Room page (infinity 6 quarters, Room v2).
-const GATED_PAGES = ['gigas-garden', 'Infinity_6-rooms'];
+// Pages behind the sign-in gate: the My Room page (Infinity_6-rooms, infinity 6 quarters, Room v2).
+// gigas-garden is intentionally ungated (Nov 5, 2026, User's): hub links go straight to the game.
+const GATED_PAGES = ['Infinity_6-rooms'];
 
 // Puts the sign-in gate (public/auth-gate.js) in front of each gated page with the right data-mode.
 // Dev: served on the fly. Build: written into dist.
 function gigasGate() {
   const tag = `<script src="../auth-gate.js" data-mode="${AUTH_MODE}"></script>`;
-  // The game file now carries the tag itself, so a hand copy to gh-pages keeps the gate. If it is there, only set
+  // A gated page file now carries the tag itself, so a hand copy to gh-pages keeps the gate. If it is there, only set
   // its mode; otherwise add it. Either way the page loads the gate exactly once.
   const inject = (html) => GATE_TAG.test(html)
     ? html.replace(GATE_TAG, tag)
