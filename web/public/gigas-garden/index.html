@@ -12,6 +12,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Neon Vigil: Gigas Garden</title>
+  <!-- Same font as the main site (locked Nov 4): VT323 retro terminal, 18px. -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <!--
     ===========================================================================
     NEON VIGIL: GIGAS GARDEN — REMIX.GG SINGLE-FILE ENGINE (DEEP TIME 5150)
@@ -59,7 +61,7 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-      font-family: "Courier New", Courier, monospace;
+      font-family: "VT323", "Courier New", Courier, monospace;
     }
 
     html, body {
@@ -68,6 +70,7 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      font-size: 18px;
       background: var(--bg-black);
       color: var(--silver);
       touch-action: none;
@@ -105,7 +108,7 @@
     }
 
     .status-canon {
-      font-size: 11px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--cyan);
       letter-spacing: 0.5px;
@@ -116,7 +119,7 @@
     }
 
     @media (max-width: 360px) {
-      .status-canon { font-size: 10px; letter-spacing: 0.2px; }
+      .status-canon { font-size: 18px; letter-spacing: 0.2px; }
     }
 
 
@@ -147,7 +150,7 @@
     @keyframes nv-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
     .ticker.ticker-static { text-align: center; -webkit-mask-image: none; mask-image: none; }
     .ticker.ticker-static .ticker-track { animation: none; transform: none; }
-    .title-ticker { font-size: 11px; color: var(--magenta); font-weight: bold; white-space: nowrap; }
+    .title-ticker { font-size: 18px; color: var(--magenta); font-weight: bold; white-space: nowrap; }
 
     /* Task 3: Hexa Sigil start control (inline SVG, no text inside the symbol) */
     .sigil-btn {
@@ -167,7 +170,7 @@
     }
     .sigil-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
     .sigil-btn:active svg { transform: scale(0.94); }
-    .sigil-hint { font-size: 10px; letter-spacing: 2px; color: var(--cyan); text-align: center; opacity: 0.75; }
+    .sigil-hint { font-size: 18px; letter-spacing: 2px; color: var(--cyan); text-align: center; opacity: 0.75; }
     @keyframes nv-sigil {
       0%, 100% { transform: scale(1); opacity: 0.88; filter: drop-shadow(0 0 3px var(--sigil-a)) drop-shadow(0 0 8px var(--sigil-b)); }
       50%      { transform: scale(1.045); opacity: 1; filter: drop-shadow(0 0 5px var(--sigil-a)) drop-shadow(0 0 16px var(--sigil-b)); }
@@ -281,7 +284,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      font-size: 11px;
+      font-size: 18px;
     }
 
     .pill {
@@ -304,7 +307,7 @@
       border: 1px solid var(--cyan);
       box-shadow: 2px 2px 0 var(--magenta);
       padding: 4px 8px;
-      font-size: 11px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       text-transform: uppercase;
@@ -354,11 +357,11 @@
     #console-modal .console-choices { display: flex; gap: 8px; }
     #console-modal .console-choices .hud-btn {
       flex: 1; min-height: 48px; display: inline-flex; align-items: center; justify-content: center;
-      font-size: 13px; letter-spacing: 1px; text-decoration: none; text-align: center;
+      font-size: 18px; letter-spacing: 1px; text-decoration: none; text-align: center;
     }
 
     .modal-title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--cyan);
       border-bottom: 1px solid var(--amethyst);
@@ -434,26 +437,26 @@
     /* TOOL button: hammer glyph + equipped tool name */
     #tool-btn .tool-glyph { display: inline-flex; }
     /* INTERACT button: glyph + short label follow what is nearby (interact / cut / gather) */
-    #interact-btn .act-name { font-size: 10px; letter-spacing: 0.5px; }
+    #interact-btn .act-name { font-size: 18px; letter-spacing: 0.5px; }
     #interact-btn[data-action="cut"] { border-color: var(--magenta); color: var(--magenta); }
     #interact-btn[data-action="gather"] { border-color: #b8ff00; color: #b8ff00; }
     @media (max-width: 420px) { #interact-btn .act-name { display: none; } }
 
     #dialogue-speaker {
-      font-size: 11px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--speaker-name, var(--magenta));
       text-transform: uppercase;
     }
 
     #dialogue-sys {
-      font-size: 11px;
+      font-size: 18px;
       color: var(--cyan);
       font-weight: bold;
     }
 
     #dialogue-text {
-      font-size: 12px;
+      font-size: 18px;
       line-height: 1.45;
       color: var(--silver);
     }
@@ -490,7 +493,7 @@
       border: 1px solid var(--cyan);
       color: var(--silver);
       font-weight: bold;
-      font-size: 13px;
+      font-size: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -541,6 +544,27 @@
       pointer-events: auto; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
     }
     #nv-cam-reset.detached { border-color: var(--magenta); color: var(--magenta); box-shadow: 0 0 10px rgba(255,30,138,0.6); }
+    /* ---- Same input cursor as the main site (hub name input, locked Nov 5):
+            no computer text cursor / no I-beam, a blinking underscore follows
+            behind every letter as you type, inline in the line, no grey box. ---- */
+    .nv-type-line { position: relative; flex: 1; display: flex; align-items: center; min-width: 0; }
+    .nv-type-line input[type="text"] {
+      flex: 1; min-width: 0; background: transparent; border: 0; outline: none;
+      color: transparent; caret-color: transparent; cursor: default;
+      padding: 8px; font-size: 18px; font-family: "VT323", "Courier New", monospace;
+    }
+    .nv-type-line input[type="text"]:focus { outline: none; }
+    .nv-type-echo {
+      position: absolute; left: 0; top: 0; bottom: 0; display: flex; align-items: center;
+      padding: 8px; pointer-events: none; white-space: pre; overflow: hidden;
+      color: #fff; font-size: 18px; font-family: "VT323", "Courier New", monospace;
+    }
+    .nv-type-echo .nv-type-ph { color: rgba(226, 232, 240, 0.55); }
+    .nv-type-underscore { display: inline-block; animation: nv-underscore-blink 1.2s steps(2, start) infinite; color: #fff; }
+    @keyframes nv-underscore-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    .nv-type-line input[type="text"]:disabled + .nv-type-echo .nv-type-underscore { display: none; }
+    @media (prefers-reduced-motion: reduce) { .nv-type-underscore { animation: none !important; } }
+
   </style>
 </head>
 <body>
@@ -586,11 +610,11 @@
       <section id="title-modal" class="modal-card visible">
         <div class="modal-title">NEON VIGIL // GIGAS GARDEN</div>
         <div class="status-canon ticker title-ticker" data-ticker role="status" aria-live="off"><div class="ticker-track"><span class="ticker-run">ONLINE</span></div></div>
-        <p style="font-size:12px; line-height:1.5; margin:0;">
+        <p style="font-size: 18px; line-height:1.5; margin:0;">
           Stranded in the Gigas Garden, Earth 5150.
           Wake aboard the bridge, cut the airlock vines, step into the Garden, sync with creatures, and build a refuge around the hull.
         </p>
-        <div style="font-size:11px; color:var(--cyan); border-left:2px solid var(--amethyst); padding-left:8px;">
+        <div style="font-size: 18px; color:var(--cyan); border-left:2px solid var(--amethyst); padding-left:8px;">
           "Hexa Sigil Online."
         </div>
         <button class="sigil-btn" id="sigil-btn" type="button" aria-label="Tap the Hexa Sigil to begin" onclick="window.NVGame.startBootSequence()">
@@ -621,7 +645,7 @@
           <span class="pill magenta" id="enc-caste-tag">WARDEN</span>
         </div>
         <canvas id="encounter-canvas" width="380" height="170"></canvas>
-        <div id="enc-status-text" style="font-size:11px; color:var(--silver);">
+        <div id="enc-status-text" style="font-size: 18px; color:var(--silver);">
           Time your Strike, Guard, or Sync pulse when the cyan marker crosses the harmonic window.
         </div>
         <div style="display:flex; gap:6px; justify-content:space-between;">
@@ -637,7 +661,7 @@
           <div class="modal-title" style="border:none; padding:0;">GRID LOG // COLONY & DISCOVERIES</div>
           <button class="hud-btn" onclick="window.NVGame.toggleGridLog()">CLOSE</button>
         </div>
-        <div id="gridlog-content" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div id="gridlog-content" style="max-height:260px; overflow-y:auto; font-size: 18px; display:flex; flex-direction:column; gap:8px;"></div>
       </section>
 
       <!-- 3b. BRIDGE CONSOLE menu: carry on at the Bridge, or go to My Room (Infinity_6-rooms) -->
@@ -658,8 +682,8 @@
           <div class="modal-title" style="border:none; padding:0;">BUILD // CONTAINER UNITS & STRUCTURES</div>
           <button class="hud-btn" onclick="window.NVGame.toggleBuildMenu()">CLOSE</button>
         </div>
-        <div id="build-materials-line" style="font-size:11px; color:var(--cyan); margin-bottom:6px;"></div>
-        <div id="build-list" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div id="build-materials-line" style="font-size: 18px; color:var(--cyan); margin-bottom:6px;"></div>
+        <div id="build-list" style="max-height:260px; overflow-y:auto; font-size: 18px; display:flex; flex-direction:column; gap:8px;"></div>
       </section>
 
       <!-- 5. CHAT Modal (Neon Vigil room, Supabase) -->
@@ -668,10 +692,10 @@
           <div class="modal-title" style="border:none; padding:0;">CHAT // NEON VIGIL ROOM</div>
           <button class="hud-btn" onclick="window.NVGame.toggleChat()">CLOSE</button>
         </div>
-        <div id="chat-messages" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
-        <div style="font-size:11px; color:var(--silver);">Posting needs sign-in — the game has no sign-in flow yet, so sending is off for now. Reading is live.</div>
+        <div id="chat-messages" style="max-height:260px; overflow-y:auto; font-size: 18px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div style="font-size: 18px; color:var(--silver);">Posting needs sign-in — the game has no sign-in flow yet, so sending is off for now. Reading is live.</div>
         <div style="display:flex; gap:6px;">
-          <input id="chat-input" type="text" maxlength="2000" disabled placeholder="Sign in to send…" style="flex:1; background:#0b0414; border:1px solid var(--cyan); color:#fff; padding:8px; font-size:11px;">
+          <div class="nv-type-line" id="chat-input-line"><input id="chat-input" type="text" maxlength="2000" disabled placeholder="Sign in to send…" aria-label="Chat message"><span class="nv-type-echo" aria-hidden="true"><span class="nv-type-text"></span><span class="nv-type-underscore">_</span></span></div>
           <button class="hud-btn" disabled>SEND</button>
         </div>
       </section>
@@ -701,7 +725,7 @@
         <button class="pad-btn" onpointerdown="window.NVGame.setMove(1, 0)" onpointerup="window.NVGame.setMove(0, 0)">▶</button>
       </div>
 
-      <div style="font-size:11px; text-align:center; color:var(--cyan); max-width:220px;" id="objective-banner">
+      <div style="font-size: 18px; text-align:center; color:var(--cyan); max-width:220px;" id="objective-banner">
         OBJECTIVE: Reach the bridge console.
       </div>
 
@@ -713,6 +737,44 @@
       </div>
     </footer>
   </div>
+
+
+  <script>
+    /* Hub-style input cursor (same as the main site): the real input's caret is
+       transparent and the echo shows the typed letters with a blinking underscore
+       right behind the last letter. Applies to every text input in the game. */
+    (function () {
+      function enhance(input) {
+        if (!input || input.dataset.nvUnderscore) return;
+        input.dataset.nvUnderscore = '1';
+        var line = input.closest('.nv-type-line');
+        if (!line) return;
+        var echo = line.querySelector('.nv-type-echo');
+        var text = echo && echo.querySelector('.nv-type-text');
+        function sync() {
+          var ph = echo.querySelector('.nv-type-ph');
+          if (input.value) {
+            if (ph) ph.remove();
+            text.textContent = input.value;
+          } else if (input.placeholder) {
+            if (!ph) {
+              ph = document.createElement('span');
+              ph.className = 'nv-type-ph';
+              echo.insertBefore(ph, echo.querySelector('.nv-type-underscore'));
+            }
+            ph.textContent = input.placeholder;
+            text.textContent = '';
+          } else {
+            text.textContent = '';
+          }
+        }
+        input.addEventListener('input', sync);
+        line.addEventListener('pointerdown', function () { if (!input.disabled) input.focus(); });
+        sync();
+      }
+      document.querySelectorAll('input[type="text"]').forEach(enhance);
+    })();
+  </script>
 
   <script>
     /* Task 3: status ticker. Order: ONLINE | day month time | weather.
@@ -2578,12 +2640,12 @@
       encCtx.lineWidth = 2;
       encCtx.strokeRect(24, 22, 332, 72);
       encCtx.fillStyle = '#00f0ff';
-      encCtx.font = 'bold 12px Courier New';
+      encCtx.font = '18px VT323';
       encCtx.fillText(`${state.activeEncounter.name} [HP: ${state.activeEncounter.hp}/${state.activeEncounter.maxHp}]`, 36, 48);
 
       const activeTool = state.toolsUnlocked[state.equippedToolIdx];
       encCtx.fillStyle = '#e2e8f0';
-      encCtx.font = '11px Courier New';
+      encCtx.font = '18px VT323';
       // EQUIPPED: [tool glyph] (no tool word)
       const eqLabel = 'EQUIPPED: ';
       encCtx.fillText(eqLabel, 36, 74);
