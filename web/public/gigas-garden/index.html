@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- My Room test link: ?stage=room opens the Infinity 6 room page straight away (same sign-in session). -->
+  <script>
+    (function () {
+      try {
+        if (new URLSearchParams(location.search).get('stage') === 'room') location.replace('../Infinity_6-rooms/');
+      } catch (e) { /* stay on the game */ }
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Neon Vigil: Gigas Garden</title>
+  <!-- Same font as the main site (locked Nov 4): VT323 retro terminal, 18px. -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <!--
     ===========================================================================
     NEON VIGIL: GIGAS GARDEN — REMIX.GG SINGLE-FILE ENGINE (DEEP TIME 5150)
@@ -51,7 +61,7 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-      font-family: "Courier New", Courier, monospace;
+      font-family: "VT323", "Courier New", Courier, monospace;
     }
 
     html, body {
@@ -60,6 +70,7 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      font-size: 18px;
       background: var(--bg-black);
       color: var(--silver);
       touch-action: none;
@@ -97,7 +108,7 @@
     }
 
     .status-canon {
-      font-size: 11px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--cyan);
       letter-spacing: 0.5px;
@@ -108,7 +119,7 @@
     }
 
     @media (max-width: 360px) {
-      .status-canon { font-size: 10px; letter-spacing: 0.2px; }
+      .status-canon { font-size: 18px; letter-spacing: 0.2px; }
     }
 
 
@@ -139,7 +150,7 @@
     @keyframes nv-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
     .ticker.ticker-static { text-align: center; -webkit-mask-image: none; mask-image: none; }
     .ticker.ticker-static .ticker-track { animation: none; transform: none; }
-    .title-ticker { font-size: 11px; color: var(--magenta); font-weight: bold; white-space: nowrap; }
+    .title-ticker { font-size: 18px; color: var(--magenta); font-weight: bold; white-space: nowrap; }
 
     /* Task 3: Hexa Sigil start control (inline SVG, no text inside the symbol) */
     .sigil-btn {
@@ -159,7 +170,7 @@
     }
     .sigil-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
     .sigil-btn:active svg { transform: scale(0.94); }
-    .sigil-hint { font-size: 10px; letter-spacing: 2px; color: var(--cyan); text-align: center; opacity: 0.75; }
+    .sigil-hint { font-size: 18px; letter-spacing: 2px; color: var(--cyan); text-align: center; opacity: 0.75; }
     @keyframes nv-sigil {
       0%, 100% { transform: scale(1); opacity: 0.88; filter: drop-shadow(0 0 3px var(--sigil-a)) drop-shadow(0 0 8px var(--sigil-b)); }
       50%      { transform: scale(1.045); opacity: 1; filter: drop-shadow(0 0 5px var(--sigil-a)) drop-shadow(0 0 16px var(--sigil-b)); }
@@ -273,7 +284,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      font-size: 11px;
+      font-size: 18px;
     }
 
     .pill {
@@ -296,7 +307,7 @@
       border: 1px solid var(--cyan);
       box-shadow: 2px 2px 0 var(--magenta);
       padding: 4px 8px;
-      font-size: 11px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       text-transform: uppercase;
@@ -341,8 +352,16 @@
       display: flex;
     }
 
+    /* Bridge Console menu (Bridge / My Room): big tap targets for phone and desktop */
+    #console-modal { max-width: 320px; }
+    #console-modal .console-choices { display: flex; gap: 8px; }
+    #console-modal .console-choices .hud-btn {
+      flex: 1; min-height: 48px; display: inline-flex; align-items: center; justify-content: center;
+      font-size: 18px; letter-spacing: 1px; text-decoration: none; text-align: center;
+    }
+
     .modal-title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--cyan);
       border-bottom: 1px solid var(--amethyst);
@@ -418,26 +437,26 @@
     /* TOOL button: hammer glyph + equipped tool name */
     #tool-btn .tool-glyph { display: inline-flex; }
     /* INTERACT button: glyph + short label follow what is nearby (interact / cut / gather) */
-    #interact-btn .act-name { font-size: 10px; letter-spacing: 0.5px; }
+    #interact-btn .act-name { font-size: 18px; letter-spacing: 0.5px; }
     #interact-btn[data-action="cut"] { border-color: var(--magenta); color: var(--magenta); }
     #interact-btn[data-action="gather"] { border-color: #b8ff00; color: #b8ff00; }
     @media (max-width: 420px) { #interact-btn .act-name { display: none; } }
 
     #dialogue-speaker {
-      font-size: 11px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--speaker-name, var(--magenta));
       text-transform: uppercase;
     }
 
     #dialogue-sys {
-      font-size: 11px;
+      font-size: 18px;
       color: var(--cyan);
       font-weight: bold;
     }
 
     #dialogue-text {
-      font-size: 12px;
+      font-size: 18px;
       line-height: 1.45;
       color: var(--silver);
     }
@@ -474,7 +493,7 @@
       border: 1px solid var(--cyan);
       color: var(--silver);
       font-weight: bold;
-      font-size: 13px;
+      font-size: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -492,6 +511,60 @@
       gap: 6px;
       justify-content: flex-end;
     }
+
+    /* Touch controls (coarse pointers only): always-visible move stick lower-left,
+       one-finger drag orbits the camera, pinch zooms (in to first person),
+       two-finger swipe detaches the camera, reset button returns it behind Neon. */
+    #nv-touch { display: none; }
+    html.nv-touch-ui #nv-touch { display: block; }
+    html.nv-touch-ui .dpad { display: none; }
+    html.nv-touch-ui #objective-banner { flex: 1; }
+    #nv-touch.nv-hidden { display: none !important; }
+    #nv-stick {
+      position: fixed; z-index: 12; left: calc(16px + env(safe-area-inset-left, 0px));
+      bottom: var(--nv-stick-bottom, 96px);
+      width: 116px; height: 116px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,240,255,0.10) 0%, rgba(7,3,12,0.55) 70%);
+      border: 2px solid var(--cyan); box-shadow: 0 0 12px rgba(0,240,255,0.35), inset 0 0 10px rgba(255,30,138,0.25);
+      touch-action: none; pointer-events: auto; opacity: 0.85;
+    }
+    #nv-stick.engaged { opacity: 1; border-color: var(--magenta); }
+    @media (orientation: landscape) and (max-height: 500px) { #nv-stick { width: 104px; height: 104px; } }
+    #nv-stick-knob {
+      position: absolute; left: 50%; top: 50%; width: 50px; height: 50px; margin: -25px 0 0 -25px;
+      border-radius: 50%; background: rgba(20,8,36,0.9); border: 2px solid var(--magenta);
+      box-shadow: 0 0 10px rgba(255,30,138,0.6); pointer-events: none; will-change: transform;
+    }
+    #nv-cam-reset {
+      position: fixed; z-index: 12; right: calc(16px + env(safe-area-inset-right, 0px));
+      bottom: var(--nv-reset-bottom, 96px);
+      width: 44px; height: 44px; border-radius: 50%; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(7,3,12,0.8); border: 2px solid var(--cyan); color: var(--cyan);
+      pointer-events: auto; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+    }
+    #nv-cam-reset.detached { border-color: var(--magenta); color: var(--magenta); box-shadow: 0 0 10px rgba(255,30,138,0.6); }
+    /* ---- Same input cursor as the main site (hub name input, locked Nov 5):
+            no computer text cursor / no I-beam, a blinking underscore follows
+            behind every letter as you type, inline in the line, no grey box. ---- */
+    .nv-type-line { position: relative; flex: 1; display: flex; align-items: center; min-width: 0; }
+    .nv-type-line input[type="text"] {
+      flex: 1; min-width: 0; background: transparent; border: 0; outline: none;
+      color: transparent; caret-color: transparent; cursor: default;
+      padding: 8px; font-size: 18px; font-family: "VT323", "Courier New", monospace;
+    }
+    .nv-type-line input[type="text"]:focus { outline: none; }
+    .nv-type-echo {
+      position: absolute; left: 0; top: 0; bottom: 0; display: flex; align-items: center;
+      padding: 8px; pointer-events: none; white-space: pre; overflow: hidden;
+      color: #fff; font-size: 18px; font-family: "VT323", "Courier New", monospace;
+    }
+    .nv-type-echo .nv-type-ph { color: rgba(226, 232, 240, 0.55); }
+    .nv-type-underscore { display: inline-block; animation: nv-underscore-blink 1.2s steps(2, start) infinite; color: #fff; }
+    @keyframes nv-underscore-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    .nv-type-line input[type="text"]:disabled + .nv-type-echo .nv-type-underscore { display: none; }
+    @media (prefers-reduced-motion: reduce) { .nv-type-underscore { animation: none !important; } }
+
   </style>
 </head>
 <body>
@@ -501,6 +574,12 @@
   <div id="grade-overlay"></div>
   <div id="mist-overlay" aria-hidden="true"></div>
   <div id="crt-overlay" aria-hidden="true"></div>
+
+  <!-- Touch controls (shown on touch / coarse-pointer devices only) -->
+  <div id="nv-touch" aria-hidden="false">
+    <div id="nv-stick" role="application" aria-label="Move"><div id="nv-stick-knob"></div></div>
+    <button id="nv-cam-reset" type="button" aria-label="Reset camera" title="Reset camera"><svg class="nv-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+  </div>
 
   <!-- DOM HUD & Overlays -->
   <div id="hud-layer">
@@ -520,6 +599,7 @@
           <button class="hud-btn icon-btn active-tool" id="tool-btn" onclick="window.NVGame.cycleTool()" aria-label="Tool: Fists (press Q to cycle)" title="Tool: FISTS (Q to cycle)"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 12-8.4 8.4a2.1 2.1 0 0 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.9-1.9a2 2 0 0 1-.6-1.4V7l-2.3-2.3a6 6 0 0 0-4.2-1.7H9l.9.8A6.2 6.2 0 0 1 12 8.4V10l2 2h1.2a2 2 0 0 1 1.4.6l1.9 1.9"/></svg><span class="tool-glyph"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 4 0"/><path d="M8 8a2 2 0 0 1 4 0"/><path d="M12 8a2 2 0 0 1 4 0"/><path d="M16 9a2 2 0 0 1 4 0"/><path d="M4 9v5a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7V9"/><path d="M8 8v3"/><path d="M12 8v3"/><path d="M16 9v2"/><path d="M4 14h7a2 2 0 0 0 2-2"/></svg></span></button>
           <button class="hud-btn icon-btn" onclick="window.NVGame.toggleGridLog()" aria-label="Grid log" title="Grid log"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>
           <button class="hud-btn icon-btn" id="audio-btn" onclick="window.NVGame.toggleAudio()" aria-label="Sound" title="Sound: on" aria-pressed="true"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button>
+          <input id="theme-vol" type="range" min="0" max="1" step="0.05" value="0.8" aria-label="Music volume" title="Music volume" style="width:90px; accent-color:#00f0ff;">
         </div>
       </div>
     </header>
@@ -530,11 +610,11 @@
       <section id="title-modal" class="modal-card visible">
         <div class="modal-title">NEON VIGIL // GIGAS GARDEN</div>
         <div class="status-canon ticker title-ticker" data-ticker role="status" aria-live="off"><div class="ticker-track"><span class="ticker-run">ONLINE</span></div></div>
-        <p style="font-size:12px; line-height:1.5; margin:0;">
+        <p style="font-size: 18px; line-height:1.5; margin:0;">
           Stranded in the Gigas Garden, Earth 5150.
           Wake aboard the bridge, cut the airlock vines, step into the Garden, sync with creatures, and build a refuge around the hull.
         </p>
-        <div style="font-size:11px; color:var(--cyan); border-left:2px solid var(--amethyst); padding-left:8px;">
+        <div style="font-size: 18px; color:var(--cyan); border-left:2px solid var(--amethyst); padding-left:8px;">
           "Hexa Sigil Online."
         </div>
         <button class="sigil-btn" id="sigil-btn" type="button" aria-label="Tap the Hexa Sigil to begin" onclick="window.NVGame.startBootSequence()">
@@ -565,7 +645,7 @@
           <span class="pill magenta" id="enc-caste-tag">WARDEN</span>
         </div>
         <canvas id="encounter-canvas" width="380" height="170"></canvas>
-        <div id="enc-status-text" style="font-size:11px; color:var(--silver);">
+        <div id="enc-status-text" style="font-size: 18px; color:var(--silver);">
           Time your Strike, Guard, or Sync pulse when the cyan marker crosses the harmonic window.
         </div>
         <div style="display:flex; gap:6px; justify-content:space-between;">
@@ -581,7 +661,19 @@
           <div class="modal-title" style="border:none; padding:0;">GRID LOG // COLONY & DISCOVERIES</div>
           <button class="hud-btn" onclick="window.NVGame.toggleGridLog()">CLOSE</button>
         </div>
-        <div id="gridlog-content" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div id="gridlog-content" style="max-height:260px; overflow-y:auto; font-size: 18px; display:flex; flex-direction:column; gap:8px;"></div>
+      </section>
+
+      <!-- 3b. BRIDGE CONSOLE menu: carry on at the Bridge, or go to My Room (Infinity_6-rooms) -->
+      <section id="console-modal" class="modal-card" role="dialog" aria-modal="false" aria-labelledby="console-title">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="modal-title" id="console-title" style="border:none; padding:0;">BRIDGE CONSOLE</div>
+          <button class="hud-btn" type="button" onclick="window.NVGame.closeConsoleMenu()" aria-label="Close">CLOSE</button>
+        </div>
+        <div class="console-choices">
+          <button class="hud-btn" type="button" id="console-bridge" onclick="window.NVGame.consoleBridge()">BRIDGE</button>
+          <a class="hud-btn" id="console-room" href="../Infinity_6-rooms/">MY ROOM</a>
+        </div>
       </section>
 
       <!-- 4. BUILD Modal (container units & structures) -->
@@ -590,8 +682,8 @@
           <div class="modal-title" style="border:none; padding:0;">BUILD // CONTAINER UNITS & STRUCTURES</div>
           <button class="hud-btn" onclick="window.NVGame.toggleBuildMenu()">CLOSE</button>
         </div>
-        <div id="build-materials-line" style="font-size:11px; color:var(--cyan); margin-bottom:6px;"></div>
-        <div id="build-list" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div id="build-materials-line" style="font-size: 18px; color:var(--cyan); margin-bottom:6px;"></div>
+        <div id="build-list" style="max-height:260px; overflow-y:auto; font-size: 18px; display:flex; flex-direction:column; gap:8px;"></div>
       </section>
 
       <!-- 5. CHAT Modal (Neon Vigil room, Supabase) -->
@@ -600,10 +692,10 @@
           <div class="modal-title" style="border:none; padding:0;">CHAT // NEON VIGIL ROOM</div>
           <button class="hud-btn" onclick="window.NVGame.toggleChat()">CLOSE</button>
         </div>
-        <div id="chat-messages" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
-        <div style="font-size:11px; color:var(--silver);">Posting needs sign-in — the game has no sign-in flow yet, so sending is off for now. Reading is live.</div>
+        <div id="chat-messages" style="max-height:260px; overflow-y:auto; font-size: 18px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div style="font-size: 18px; color:var(--silver);">Posting needs sign-in — the game has no sign-in flow yet, so sending is off for now. Reading is live.</div>
         <div style="display:flex; gap:6px;">
-          <input id="chat-input" type="text" maxlength="2000" disabled placeholder="Sign in to send…" style="flex:1; background:#0b0414; border:1px solid var(--cyan); color:#fff; padding:8px; font-size:11px;">
+          <div class="nv-type-line" id="chat-input-line"><input id="chat-input" type="text" maxlength="2000" disabled placeholder="Sign in to send…" aria-label="Chat message"><span class="nv-type-echo" aria-hidden="true"><span class="nv-type-text"></span><span class="nv-type-underscore">_</span></span></div>
           <button class="hud-btn" disabled>SEND</button>
         </div>
       </section>
@@ -633,7 +725,7 @@
         <button class="pad-btn" onpointerdown="window.NVGame.setMove(1, 0)" onpointerup="window.NVGame.setMove(0, 0)">▶</button>
       </div>
 
-      <div style="font-size:11px; text-align:center; color:var(--cyan); max-width:220px;" id="objective-banner">
+      <div style="font-size: 18px; text-align:center; color:var(--cyan); max-width:220px;" id="objective-banner">
         OBJECTIVE: Reach the bridge console.
       </div>
 
@@ -645,6 +737,44 @@
       </div>
     </footer>
   </div>
+
+
+  <script>
+    /* Hub-style input cursor (same as the main site): the real input's caret is
+       transparent and the echo shows the typed letters with a blinking underscore
+       right behind the last letter. Applies to every text input in the game. */
+    (function () {
+      function enhance(input) {
+        if (!input || input.dataset.nvUnderscore) return;
+        input.dataset.nvUnderscore = '1';
+        var line = input.closest('.nv-type-line');
+        if (!line) return;
+        var echo = line.querySelector('.nv-type-echo');
+        var text = echo && echo.querySelector('.nv-type-text');
+        function sync() {
+          var ph = echo.querySelector('.nv-type-ph');
+          if (input.value) {
+            if (ph) ph.remove();
+            text.textContent = input.value;
+          } else if (input.placeholder) {
+            if (!ph) {
+              ph = document.createElement('span');
+              ph.className = 'nv-type-ph';
+              echo.insertBefore(ph, echo.querySelector('.nv-type-underscore'));
+            }
+            ph.textContent = input.placeholder;
+            text.textContent = '';
+          } else {
+            text.textContent = '';
+          }
+        }
+        input.addEventListener('input', sync);
+        line.addEventListener('pointerdown', function () { if (!input.disabled) input.focus(); });
+        sync();
+      }
+      document.querySelectorAll('input[type="text"]').forEach(enhance);
+    })();
+  </script>
 
   <script>
     /* Task 3: status ticker. Order: ONLINE | day month time | weather.
@@ -865,8 +995,8 @@
        side-profile portrait (assets/portraits/<id>.png, 256 px) beside the text.
        anim: 'bob' = slight bob while the line types; 'glow' = glow pulse (holograms, no mouth flaps). */
     const SPEAKERS = {
-      hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
-      cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
+      hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa-idle.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
+      cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr-idle.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
       neon:    { name: 'NEON ULTRA',  portrait: 'assets/portraits/neon.png',   accent: '#ff1e8a', nameColor: '#ff1e8a', anim: 'bob' },
       val17:   { name: 'VAL 17',      portrait: 'assets/portraits/val17.png',  accent: '#ff6ec7', nameColor: '#ff6ec7', anim: 'bob' },
       praxia:  { name: 'PRAXIA',      portrait: 'assets/portraits/praxia.png', accent: '#ff1e8a', nameColor: '#ffb3dd', anim: 'glow' },
@@ -894,7 +1024,7 @@
         name: 'BALT-SHELL CARRIER',
         caste: 'HAULER',
         powerSet: '+2 Carry Capacity per synced Hauler · Sync: DIG',
-        desc: 'Biological chitin carapace, 4% readable face, immune to acidic First Water. Moves fallen stone and salvage around the Infiniti 6 hull.',
+        desc: 'Biological chitin carapace, 4% readable face, immune to acidic First Water. Moves fallen stone and salvage around the Infinity 6 hull.',
         canSync: true
       },
       warden: {
@@ -976,10 +1106,32 @@
     const duckReasons = new Set();      // 'dialogue' | 'sync'
     let fadeRaf = 0;
 
+    // Music volume (Oct 28, 2026): user slider, 0-1, saved in this
+    // browser. It scales the full and ducked theme levels, so ducking
+    // still works at any volume, and 0 is effectively muted.
+    let themeVolume = 0.8;
+    try {
+      const savedVol = Number(localStorage.getItem('nv-theme-volume'));
+      if (Number.isFinite(savedVol)) themeVolume = Math.min(1, Math.max(0, savedVol));
+    } catch { /* storage unavailable: keep default */ }
     function audioTargetLevel() {
       if (!audioEnabled || audioStopped || hostMuted) return 0;
-      return duckReasons.size ? AUDIO_LEVEL_DUCK : AUDIO_LEVEL_FULL;
+      return (duckReasons.size ? AUDIO_LEVEL_DUCK : AUDIO_LEVEL_FULL) * themeVolume;
     }
+    function setThemeVolume(v) {
+      themeVolume = Math.min(1, Math.max(0, Number(v) || 0));
+      try { localStorage.setItem('nv-theme-volume', String(themeVolume)); } catch { /* ignore */ }
+      const slider = document.getElementById('theme-vol');
+      if (slider) slider.value = String(themeVolume);
+      if (audioUnlocked && audioEnabled && !audioStopped && !hostMuted) fadeThemeTo(audioTargetLevel());
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const slider = document.getElementById('theme-vol');
+      if (slider) {
+        slider.value = String(themeVolume);
+        slider.addEventListener('input', (e) => setThemeVolume(e.target.value));
+      }
+    });
 
     function fadeThemeTo(target, onDone) {
       cancelAnimationFrame(fadeRaf);
@@ -1075,7 +1227,7 @@
     const container = document.getElementById('viewport-container');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x07030d);
-    // Exterior violet-pink fog (kept off when inside Infiniti 6 deck). Lighter density;
+    // Exterior violet-pink fog (kept off when inside Infinity 6 deck). Lighter density;
     // the Drive plates ignore fog and use their own haze gradient instead.
     const gardenFog = new THREE.FogExp2(0xc23d8f, 0.012);
 
@@ -1204,7 +1356,7 @@
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
 
-    // Zone 1: Infiniti 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
+    // Zone 1: Infinity 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
     const deckFloor = new THREE.Mesh(
       new THREE.BoxGeometry(14, 0.5, 20),
       new THREE.MeshStandardMaterial({ color: 0x120c1f, metalness: 0.7, roughness: 0.3 })
@@ -1933,14 +2085,20 @@
     praxiaGroup.add(praxiaProcedural);
     worldGroup.add(praxiaGroup);
     toonify(praxiaProcedural);
-    interactables.push({ id: 'praxia', label: 'Praxia', group: praxiaGroup, x: 0, z: 50, active: true });
+    const praxiaEntry = { id: 'praxia', label: 'Praxia', group: praxiaGroup, x: 0, z: 50, active: true };
+    interactables.push(praxiaEntry);
+    // PRAXIA BUMP SCENE (placeholder, User's direction Oct 24, 2026): bumping into Praxia
+    // triggers a scene; a battle attempt makes her run away. She cannot be synced.
+    let praxiaScene = 'idle'; // idle | armed | fleeing | gone
+    let praxiaSceneStartedAt = 0;
+    let praxiaReturnAt = 0;
 
-    // VAL-18 Stasis Pod (Infiniti 6 ship zone, starboard of the walkway)
+    // VAL-18 Stasis Pod, TRANSPARENT with the model inside (User's ruling Oct 24, 2026; "Just use Val 17" for the model)
     const podGroup = new THREE.Group();
     podGroup.position.set(4.2, 0, -8);
     const podBody = new THREE.Mesh(
       new THREE.CylinderGeometry(0.7, 0.7, 2.2, 16),
-      new THREE.MeshStandardMaterial({ color: 0xe8b4d8, metalness: 0.6, roughness: 0.25, transparent: true, opacity: 0.85 })
+      new THREE.MeshStandardMaterial({ color: 0xe8b4d8, metalness: 0.6, roughness: 0.25, transparent: true, opacity: 0.28 })
     );
     podBody.position.y = 1.5;
     const podCapTop = new THREE.Mesh(
@@ -1974,7 +2132,7 @@
     playerGroup.position.set(0, 0, -16);
     scene.add(playerGroup);
 
-    function buildProceduralNeonUltra() {
+        function buildProceduralNeonUltra() {
       const g = new THREE.Group();
       // Legs & Boots
       const legs = new THREE.Mesh(
@@ -2012,8 +2170,9 @@
     }
 
     const proceduralPlayer = buildProceduralNeonUltra();
-    playerGroup.add(proceduralPlayer);
-    toonify(proceduralPlayer);
+    // Emergency fallback ONLY, not added to the scene: the player is VAL 17
+    // (User's Oct 28, 2026: the game screen should be Val, not Neon), so the
+    // scene starts empty until the Val GLB mounts — no Neon on screen first.
 
     const MODEL_HEIGHT_TALL = 2.3;   // 6'3" in world units (matches procedural Neon)
     const MODEL_HEIGHT_BUG = 1.5;
@@ -2041,13 +2200,14 @@
     }
 
     // Probe Flow Studio GLB (tiered: hi/lite) -> Procedural
+    // PLAYER IS VAL 17 (User's Oct 28, 2026: game screen should be Val, not Neon).
     function probePlayerModel() {
       loadTieredGLB(
-        FLOW_STUDIO_MANIFEST.neonUltraPrimary,
-        FLOW_STUDIO_MANIFEST.neonUltraLite,
+        FLOW_STUDIO_MANIFEST.valGLB,
+        FLOW_STUDIO_MANIFEST.valLite,
         (gltf) => { mountPlayerModel(gltf); },
         () => {
-          // both Flow Studio copies failed (or a LOD swap failed): keep whatever is mounted, else procedural Neon Ultra
+          // both Val copies failed: nothing mounts — no Neon fallback, the player stays empty rather than showing Neon.
         }
       );
     }
@@ -2068,24 +2228,25 @@
       }, () => { /* procedural Praxia stays */ });
     }
 
-    // VAL-17 slot: stands beside Praxia, facing the path. Nothing renders if both copies fail to load.
-    const valGroup = new THREE.Group();
-    valGroup.position.set(4.2, 0, 47);
-    valGroup.rotation.y = Math.PI - 0.35;
-    worldGroup.add(valGroup);
+    // VAL-17: was moved into the transparent VAL-18 pod (Oct 24, 2026 ruling).
+    // SUPERSEDED Oct 28, 2026: Val is now the PLAYER, so there is no second Val
+    // in the pod — probeValModel is defined but NOT called, and the pod stays
+    // empty until she says who/what goes there. Nothing renders if both copies fail to load.
     function probeValModel() {
       loadTieredGLB(FLOW_STUDIO_MANIFEST.valGLB, FLOW_STUDIO_MANIFEST.valLite, (gltf) => {
-        const model = fitModel(gltf.scene, MODEL_HEIGHT_TALL);
-        if (glbMounts.val) valGroup.remove(glbMounts.val);
+        const model = fitModel(gltf.scene, 1.8);
+        model.position.y = 0.4;
+        model.rotation.y = Math.PI - 0.35;
+        if (glbMounts.val) podGroup.remove(glbMounts.val);
         glbMounts.val = model;
-        valGroup.add(model);
+        podGroup.add(model);
         toonify(model, glbLod === 'hi');
         armModelGuard();
       }, () => { /* no VAL stand-in */ });
     }
     probePlayerModel();
     probePraxiaModel();
-    probeValModel();
+    // probeValModel() NOT called: Val is the player now, no duplicate Val in the pod.
 
     // NWD logo: local GLB converted from the Dropbox letters OBJ
     // (assets/nwd-logo.glb). Mounted above the ship-hub walkway, facing
@@ -2129,9 +2290,10 @@
         return;
       }
       modelGuard.done = true;
-      if (glbMounts.player) { playerGroup.remove(glbMounts.player); playerGroup.add(proceduralPlayer); glbMounts.player = null; }
+      // Slow even on lite: keep the Val player model anyway — the player must
+      // be Val, so this no longer swaps to the procedural Neon fallback.
       if (glbMounts.praxia) { praxiaGroup.remove(glbMounts.praxia); praxiaProcedural.visible = true; glbMounts.praxia = null; }
-      if (glbMounts.val) { valGroup.remove(glbMounts.val); glbMounts.val = null; }
+      if (glbMounts.val) { podGroup.remove(glbMounts.val); glbMounts.val = null; }
     }
 
     // Creature slots: every caste uses a CC0 Quaternius bee (see assets/CREDITS.md), cloned per caste and tinted
@@ -2215,9 +2377,13 @@
       const sp = SPEAKERS[id] || SPEAKERS.gridlog;
       const portraitId = item.portrait || id;
       const portrait = (SPEAKERS[portraitId] && SPEAKERS[portraitId].portrait) || null;
-      return { id, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
+      return { id, portraitId, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
     }
+    const TALKING_PORTRAITS = { hexa: 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
+    let currentIdlePortrait = null;
     function stopTyping() {
+      const im2 = document.getElementById('dialogue-portrait-img');
+      if (im2 && currentIdlePortrait) im2.src = currentIdlePortrait;
       if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
       const t = document.getElementById('dialogue-text');
       t.innerHTML = typeUnits.join('');
@@ -2228,6 +2394,8 @@
       const box = document.getElementById('dialogue-box');
       if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
       if (state.dialogueQueue.length === 0) {
+        const im0 = document.getElementById('dialogue-portrait-img');
+        if (im0 && currentIdlePortrait) im0.src = currentIdlePortrait;
         box.style.display = 'none';
         box.classList.remove('speaking');
         duckAudio(false);
@@ -2245,7 +2413,9 @@
       if (who.portrait) {
         box.classList.add('has-portrait');
         img.onerror = () => box.classList.remove('has-portrait'); // missing art: text-only line
-        if (img.getAttribute('src') !== who.portrait) img.src = who.portrait;
+        currentIdlePortrait = who.portrait;
+        img.src = who.portrait;
+        if (TALKING_PORTRAITS[who.portraitId]) img.src = TALKING_PORTRAITS[who.portraitId];
         img.alt = `${who.label} portrait`;
       } else {
         box.classList.remove('has-portrait');
@@ -2470,12 +2640,12 @@
       encCtx.lineWidth = 2;
       encCtx.strokeRect(24, 22, 332, 72);
       encCtx.fillStyle = '#00f0ff';
-      encCtx.font = 'bold 12px Courier New';
+      encCtx.font = '18px VT323';
       encCtx.fillText(`${state.activeEncounter.name} [HP: ${state.activeEncounter.hp}/${state.activeEncounter.maxHp}]`, 36, 48);
 
       const activeTool = state.toolsUnlocked[state.equippedToolIdx];
       encCtx.fillStyle = '#e2e8f0';
-      encCtx.font = '11px Courier New';
+      encCtx.font = '18px VT323';
       // EQUIPPED: [tool glyph] (no tool word)
       const eqLabel = 'EQUIPPED: ';
       encCtx.fillText(eqLabel, 36, 74);
@@ -2635,6 +2805,7 @@
         updateHUD();
       },
 
+
       cycleTool() {
         state.equippedToolIdx = (state.equippedToolIdx + 1) % state.toolsUnlocked.length;
         updateHUD();
@@ -2655,25 +2826,47 @@
         setAudioEnabled(!audioEnabled);
       },
 
+      setThemeVolume(v) {
+        setThemeVolume(v);
+      },
+
       setMove(x, z) {
         state.moveInput.x = x;
         state.moveInput.z = z;
       },
 
+      openConsoleMenu() {
+        document.getElementById('console-modal').classList.add('visible');
+        const first = document.getElementById('console-bridge');
+        if (first) first.focus({ preventScroll: true });
+      },
+
+      closeConsoleMenu() {
+        document.getElementById('console-modal').classList.remove('visible');
+      },
+
+      // BRIDGE: the console's original behaviour (objective + Cyphr line), unchanged.
+      consoleBridge() {
+        this.closeConsoleMenu();
+        state.phaseStep = Math.max(state.phaseStep, 1);
+        document.getElementById('objective-banner').textContent = 'OBJECTIVE: Retrieve Laser Cutter from locker.';
+        queueDialogue([{
+          who: 'guide',
+          sys: '[CONSOLE LINK: DIRECT ADDRESS]',
+          text: 'Telemetry is on your HUD, User. Grab the {icon:laser} from the port locker.'
+        }]);
+      },
+
       interactNearest() {
+        // While the Bridge Console menu is open, E / Space go to its buttons, not the world.
+        if (document.getElementById('console-modal').classList.contains('visible')) return;
         const nearest = findNearestInteractable();
         if (!nearest) return;
 
         const tool = state.toolsUnlocked[state.equippedToolIdx];
 
         if (nearest.id === 'console') {
-          state.phaseStep = Math.max(state.phaseStep, 1);
-          document.getElementById('objective-banner').textContent = 'OBJECTIVE: Retrieve Laser Cutter from locker.';
-          queueDialogue([{
-            who: 'guide',
-            sys: '[CONSOLE LINK: DIRECT ADDRESS]',
-            text: 'Telemetry is on your HUD, User. Grab the {icon:laser} from the port locker.'
-          }]);
+          this.openConsoleMenu();
         } else if (nearest.id === 'val18_pod') {
           queueDialogue([{
             who: 'guide',
@@ -2770,14 +2963,32 @@
             text: `${nearest.label} stored in hull cargo {icon:cargo}, User.`
           }]);
         } else if (nearest.id === 'praxia') {
-          // Exact Hard Canon Approach Line
-          queueDialogue([{
-            who: 'gridlog',
-            label: 'GRID LOG // SYNC LOCK',
-            portrait: 'praxia', // GRID LOG reads out Praxia; her profile shows beside the line
-            sys: '[STATUS: CANNOT SYNC]',
-            text: 'Praxia. You cannot sync with Praxia.'
-          }]);
+          if (praxiaScene === 'armed') {
+            // Battle attempt: she sidesteps and runs. She cannot be synced, and she cannot be fought.
+            praxiaScene = 'fleeing';
+            praxiaSceneStartedAt = performance.now();
+            queueDialogue([{
+              who: 'guide',
+              sys: '[BATTLE ATTEMPT: EVADED]',
+              text: 'Your strike meets empty air, User. Praxia sidesteps, wings flaring, and runs.'
+            }, {
+              who: 'gridlog',
+              label: 'GRID LOG // SYNC LOCK',
+              portrait: 'praxia',
+              sys: '[STATUS: CANNOT SYNC]',
+              text: 'Praxia withdrew. She cannot be synced.'
+            }]);
+          } else if (praxiaScene === 'idle') {
+            // Exact Hard Canon Approach Line
+            queueDialogue([{
+              who: 'gridlog',
+              label: 'GRID LOG // SYNC LOCK',
+              portrait: 'praxia', // GRID LOG reads out Praxia; her profile shows beside the line
+              sys: '[STATUS: CANNOT SYNC]',
+              text: 'Praxia. You cannot sync with Praxia.'
+            }]);
+          }
+          // fleeing/gone: nothing — she is already going or gone.
         } else if (nearest.id.startsWith('bug_')) {
           const key = nearest.id.replace('bug_', '');
           openEncounter(key, false);
@@ -2901,14 +3112,35 @@
           if (!res.ok) throw new Error(`chat read failed: ${res.status}`);
           const rows = await res.json();
           rows.reverse();
-          const AVATARS = { hexa: 'assets/portraits/hexa.png', 'hexa sigil': 'assets/portraits/hexa.png', cyphr: 'assets/portraits/cyphr.png' };
+          const AVATARS = { hexa: 'assets/portraits/hexa-idle.png', 'hexa sigil': 'assets/portraits/hexa-idle.png', cyphr: 'assets/portraits/cyphr-idle.png' };
+          const TALKING_AVATARS = { hexa: 'assets/portraits/hexa-animated.gif', 'hexa sigil': 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
+          if (!state.chatTypedIds) state.chatTypedIds = new Set();
           box.innerHTML = rows.length ? rows.map(m => {
             const av = AVATARS[(m.user_name || '').toLowerCase()];
             const when = m.created_at ? new Date(m.created_at).toLocaleString() : '';
-            const avHtml = av ? `<img src="${av}" alt="" width="32" height="32" style="border-radius:50%; flex:none;">` : '';
-            return `<div style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
+            const avHtml = av ? `<img class="chat-avatar" src="${av}" alt="" width="32" height="32" style="border-radius:50%; flex:none;">` : '';
+            const mid = m.id != null ? String(m.id) : ((m.created_at || '') + '|' + (m.user_name || '') + '|' + (m.body || ''));
+            return `<div data-chat-id="${esc(mid)}" style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div class="chat-body" style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
           }).join('') : '<div style="color:var(--silver);">No messages in the room yet.</div>';
           box.scrollTop = box.scrollHeight;
+          // Chat is live talking too — but they are not typing, they are thinking.
+          // A new Hexa/Cyphr thought arrives whole (no fake typing); its avatar
+          // animates as a thinking beat, then settles back to mouthless idle.
+          if (rows.length) {
+            const last = rows[rows.length - 1];
+            const key = (last.user_name || '').toLowerCase();
+            const mid = last.id != null ? String(last.id) : ((last.created_at || '') + '|' + (last.user_name || '') + '|' + (last.body || ''));
+            if (TALKING_AVATARS[key] && !state.chatTypedIds.has(mid)) {
+              state.chatTypedIds.add(mid);
+              const el = box.querySelector('[data-chat-id="' + mid.replace(/"/g, '') + '"]');
+              const avEl = el ? el.querySelector('.chat-avatar') : null;
+              if (avEl) {
+                const idleSrc = AVATARS[key];
+                avEl.src = TALKING_AVATARS[key];
+                setTimeout(() => { avEl.src = idleSrc; }, 3000);
+              }
+            }
+          }
         } catch (e) {
           box.innerHTML = '<div style="color:var(--magenta);">Chat could not load. Check connection and try again.</div>';
         }
@@ -2954,6 +3186,7 @@
       if (e.code === 'KeyQ') window.NVGame.cycleTool();
       if (e.code === 'KeyB') window.NVGame.toggleBuildMenu();
       if (e.code === 'KeyC') window.NVGame.toggleChat();
+      if (e.code === 'Escape') window.NVGame.closeConsoleMenu();
     });
     window.addEventListener('keyup', (e) => { keys[e.code] = false; });
 
@@ -2992,6 +3225,12 @@
       if (keys['ArrowDown'] || keys['KeyS']) dz = 1;
       if (keys['ArrowLeft'] || keys['KeyA']) dx = -1;
       if (keys['ArrowRight'] || keys['KeyD']) dx = 1;
+      // Touch orbit: move relative to the camera heading (no-op at the default heading)
+      if (state.viewMode === 'GARDEN' && touchCam.yaw !== 0 && (dx || dz)) {
+        const fwd = -dz, rt = dx, sy = Math.sin(touchCam.yaw), cy = Math.cos(touchCam.yaw);
+        const vx = fwd * sy - rt * cy, vz = fwd * cy + rt * sy;
+        dx = -vx; dz = -vz;
+      }
 
       const speed = state.activeSyncForm === 'GLIDE' ? 0.22 : 0.16;
       if (state.viewMode === 'GARDEN') {
@@ -3002,8 +3241,13 @@
         playerGroup.position.z = THREE.MathUtils.clamp(nextZ, -18, 68);
 
         // 3D Third-Person Follow Camera: tight portrait framing, Neon in the lower third
-        camera.position.lerp(camGoal.set(playerGroup.position.x, 3.9, playerGroup.position.z - 7.4), 0.12);
-        camera.lookAt(playerGroup.position.x, 1.6, playerGroup.position.z + 6);
+        if (touchCam.isDefault()) {
+          touchCam.setFirstPerson(false);
+          camera.position.lerp(camGoal.set(playerGroup.position.x, 3.9, playerGroup.position.z - 7.4), 0.12);
+          camera.lookAt(playerGroup.position.x, 1.6, playerGroup.position.z + 6);
+        } else {
+          touchCam.apply();
+        }
       } else {
         // SIDE View: 2D Sega X-Men style side-scrolling lane along Z axis
         let nextZ = playerGroup.position.z + dx * speed;
@@ -3012,8 +3256,48 @@
         playerGroup.position.x = THREE.MathUtils.clamp(playerGroup.position.x - dz * (speed * 0.6), -6, 6);
 
         // Camera on the -x side so screen-right = deeper into the Garden (+z)
+        touchCam.setFirstPerson(false);
         camera.position.lerp(camGoal.set(-26, 3.6, playerGroup.position.z), 0.15);
         camera.lookAt(0, 1.7, playerGroup.position.z);
+      }
+
+      // PRAXIA BUMP SCENE driver: contact arms the scene, a battle attempt makes her flee,
+      // and she returns to her spot after a cooldown so the placeholder scene can repeat.
+      if (praxiaGroup.visible) {
+        const pd = Math.hypot(playerGroup.position.x - praxiaGroup.position.x, playerGroup.position.z - praxiaGroup.position.z);
+        if (praxiaScene === 'idle' && pd < 2.2) {
+          praxiaScene = 'armed';
+          queueDialogue([{
+            who: 'gridlog',
+            label: 'GRID LOG // SYNC LOCK',
+            portrait: 'praxia',
+            sys: '[STATUS: CANNOT SYNC]',
+            text: 'Praxia. You cannot sync with Praxia.'
+          }, {
+            who: 'guide',
+            sys: '[PRAXIA: CONTACT]',
+            text: 'She faces you, User. INTERACT to strike — she will not sync.'
+          }]);
+        } else if (praxiaScene === 'armed' && pd > 6) {
+          praxiaScene = 'idle';
+        } else if (praxiaScene === 'fleeing') {
+          const dxp = praxiaGroup.position.x - playerGroup.position.x;
+          const dzp = praxiaGroup.position.z - playerGroup.position.z;
+          const len = Math.hypot(dxp, dzp) || 1;
+          praxiaGroup.position.x = THREE.MathUtils.clamp(praxiaGroup.position.x + (dxp / len) * 0.55, -16, 16);
+          praxiaGroup.position.z = THREE.MathUtils.clamp(praxiaGroup.position.z + (dzp / len) * 0.55, -18, 68);
+          if (pd > 28 || performance.now() - praxiaSceneStartedAt > 2600) {
+            praxiaGroup.visible = false;
+            praxiaEntry.active = false;
+            praxiaScene = 'gone';
+            praxiaReturnAt = performance.now() + 20000;
+          }
+        }
+      } else if (praxiaScene === 'gone' && performance.now() >= praxiaReturnAt) {
+        praxiaGroup.position.set(0, 0, 50);
+        praxiaGroup.visible = true;
+        praxiaEntry.active = true;
+        praxiaScene = 'idle';
       }
 
       // Ethereal Drift Animation on Nodes & Praxia Wings
@@ -3056,8 +3340,10 @@
       fresh.viewMode = state.viewMode;
       Object.assign(state, fresh);
       interactables.forEach((n) => { n.active = true; n.group.visible = true; });
+      praxiaGroup.position.set(0, 0, 50);
+      praxiaScene = 'idle';
       playerGroup.position.set(0, 0, -16);
-      ['encounter-modal', 'gridlog-modal', 'title-modal'].forEach((id) => document.getElementById(id).classList.remove('visible'));
+      ['encounter-modal', 'gridlog-modal', 'title-modal', 'console-modal'].forEach((id) => document.getElementById(id).classList.remove('visible'));
       document.getElementById('objective-banner').textContent = OBJECTIVE_START;
       HostSDK.gameoverSent = false;
       restartThemeForPlayAgain();
@@ -3091,6 +3377,271 @@
 
     window.NVGame.gfx = () => gfxTier;
     window.NVGame.resetRun = resetRun;
+
+    /* =========================================================================
+       11. TOUCH CONTROLS (coarse pointers): move stick + gesture camera
+       - Move stick lower-left, always visible, analog, camera-relative.
+       - One-finger drag on the world: orbit the camera around Neon.
+       - Pinch: zoom; zoom all the way in for a first-person view.
+       - Two-finger swipe: detach the camera and move it freely.
+       - Reset button: camera back to its default spot behind Neon.
+       - Single tap (or long press) on an object in range: interact.
+       Desktop keyboard/mouse are untouched: these handlers only act on touch.
+       ========================================================================= */
+    const CAM_BASE_EL = Math.atan2(2.3, 7.4), CAM_BASE_LEN = Math.hypot(2.3, 7.4);
+    const touchCam = {
+      yaw: 0, el: CAM_BASE_EL, zoom: 1, detached: false, firstPerson: false,
+      pivot: new THREE.Vector3(), look: new THREE.Vector3(), _hidPlayer: false,
+      isDefault() { return this.yaw === 0 && this.el === CAM_BASE_EL && this.zoom === 1 && !this.detached; },
+      reset() {
+        this.yaw = 0; this.el = CAM_BASE_EL; this.zoom = 1; this.detached = false;
+        this.setFirstPerson(false);
+        const b = document.getElementById('nv-cam-reset'); if (b) b.classList.remove('detached');
+      },
+      setFirstPerson(on) {
+        if (on === this.firstPerson) return;
+        this.firstPerson = on;
+        if (on) { if (playerGroup.visible) { playerGroup.visible = false; this._hidPlayer = true; } }
+        else if (this._hidPlayer) { playerGroup.visible = true; this._hidPlayer = false; }
+      },
+      playerPos() { return { x: playerGroup.position.x, z: playerGroup.position.z }; },
+      forward() { return [Math.sin(this.yaw), Math.cos(this.yaw)]; },
+      right() { return [-Math.cos(this.yaw), Math.sin(this.yaw)]; },
+      detach() {
+        if (this.detached) return;
+        this.detached = true;
+        this.pivot.set(playerGroup.position.x, 1.6, playerGroup.position.z);
+        const b = document.getElementById('nv-cam-reset'); if (b) b.classList.add('detached');
+      },
+      apply() {
+        const [fx, fz] = this.forward();
+        const fp = !this.detached && this.zoom <= 0.3;
+        this.setFirstPerson(fp);
+        if (fp) {
+          const pitch = THREE.MathUtils.clamp(CAM_BASE_EL - this.el, -1.1, 1.1);
+          camGoal.set(playerGroup.position.x + fx * 0.25, 1.75, playerGroup.position.z + fz * 0.25);
+          camera.position.lerp(camGoal, 0.35);
+          this.look.set(camera.position.x + fx * Math.cos(pitch) * 10, camera.position.y + Math.sin(pitch) * 10,
+                        camera.position.z + fz * Math.cos(pitch) * 10);
+          camera.lookAt(this.look);
+          return;
+        }
+        const P = this.detached ? this.pivot : this.look.set(playerGroup.position.x, 1.6, playerGroup.position.z);
+        const len = CAM_BASE_LEN * this.zoom, ce = Math.cos(this.el), se = Math.sin(this.el);
+        camGoal.set(P.x - fx * ce * len, P.y + se * len, P.z - fz * ce * len);
+        if (camGoal.y < 0.4) camGoal.y = 0.4;
+        camera.position.lerp(camGoal, 0.18);
+        const lx = P.x + fx * 6 * Math.min(this.zoom, 1), lz = P.z + fz * 6 * Math.min(this.zoom, 1);
+        camera.lookAt(lx, P.y, lz);
+      }
+    };
+
+    (function initTouchControls() {
+      const root = document.documentElement;
+      const coarseMq = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
+      function enableTouchUI() { root.classList.add('nv-touch-ui'); }
+      function evalTouchUI() {
+        // iPad (controls LOCK, Oct 28, 2026): iPadOS reports a Mac-style
+        // platform with touch points, so treat that as a touch device too.
+        const isIPad = navigator.maxTouchPoints > 0 && navigator.platform === 'MacIntel';
+        if (isIPad || (coarseMq && coarseMq.matches) || (navigator.maxTouchPoints > 0 && window.matchMedia && window.matchMedia('(hover: none)').matches)) enableTouchUI();
+      }
+      evalTouchUI();
+      if (coarseMq && coarseMq.addEventListener) coarseMq.addEventListener('change', evalTouchUI);
+      // Hybrid devices: the first real touch turns the touch UI on.
+      window.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') enableTouchUI(); }, true);
+
+      // No page scroll / pinch-zoom / double-tap zoom while playing.
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault(), { passive: false }));
+      document.addEventListener('touchmove', (e) => {
+        const t = e.target;
+        if (t && t.closest && t.closest('#gridlog-content, #build-list, #chat-messages')) return; // keep panel lists scrollable
+        e.preventDefault();
+      }, { passive: false });
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTouchEnd < 300 && e.target === renderer.domElement) e.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
+      renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
+      renderer.domElement.style.touchAction = 'none';
+
+      // ---- Move stick ----
+      const stick = document.getElementById('nv-stick');
+      const knob = document.getElementById('nv-stick-knob');
+      const STICK_R = 42, DEAD = 0.12;
+      let stickId = null, sx = 0, sy = 0;
+      function stickSet(clientX, clientY) {
+        let ox = clientX - sx, oy = clientY - sy;
+        const d = Math.hypot(ox, oy);
+        if (d > STICK_R) { ox *= STICK_R / d; oy *= STICK_R / d; }
+        knob.style.transform = `translate(${ox}px, ${oy}px)`;
+        let nx = ox / STICK_R, ny = oy / STICK_R;
+        if (Math.hypot(nx, ny) < DEAD) { nx = 0; ny = 0; }
+        window.NVGame.setMove(nx, ny);
+      }
+      function stickEnd(e) {
+        if (e.pointerId !== stickId) return;
+        stickId = null;
+        stick.classList.remove('engaged');
+        knob.style.transform = '';
+        window.NVGame.setMove(0, 0);
+      }
+      stick.addEventListener('pointerdown', (e) => {
+        if (stickId !== null) return;
+        e.preventDefault(); e.stopPropagation();
+        stickId = e.pointerId;
+        try { stick.setPointerCapture(e.pointerId); } catch (_) {}
+        const r = stick.getBoundingClientRect();
+        sx = r.left + r.width / 2; sy = r.top + r.height / 2;
+        stick.classList.add('engaged');
+        stickSet(e.clientX, e.clientY);
+      });
+      stick.addEventListener('pointermove', (e) => { if (e.pointerId === stickId) { e.preventDefault(); stickSet(e.clientX, e.clientY); } });
+      stick.addEventListener('pointerup', stickEnd);
+      stick.addEventListener('pointercancel', stickEnd);
+      stick.addEventListener('lostpointercapture', stickEnd);
+
+      document.getElementById('nv-cam-reset').addEventListener('click', () => touchCam.reset());
+
+      // ---- World gestures (touch pointers on the 3D canvas only) ----
+      const el = renderer.domElement;
+      const pts = new Map();
+      let gesture = null; // { mode, t0, x0, y0, moved, pinchD, midX, midY, panAcc, longTimer }
+      const ORBIT_K = 0.0065, ZOOM_MIN = 0.15, ZOOM_MAX = 2.4;
+      const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+
+      function nodeFromHit(obj) {
+        while (obj) {
+          const n = interactables.find((it) => it.group === obj);
+          if (n) return n;
+          obj = obj.parent;
+        }
+        return null;
+      }
+      function touchObjectAt(x, y) {
+        if (state.viewMode !== 'GARDEN' && state.viewMode !== 'SIDE') return;
+        const r = el.getBoundingClientRect();
+        ndc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
+        ray.setFromCamera(ndc, camera);
+        const groups = interactables.filter((n) => n.active && n.group && n.group.visible).map((n) => n.group);
+        const hits = ray.intersectObjects(groups, true);
+        for (const h of hits) {
+          const n = nodeFromHit(h.object);
+          if (n && n === findNearestInteractable()) { window.NVGame.interactNearest(); return; }
+        }
+      }
+      function mid() {
+        const a = [...pts.values()];
+        return { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2, d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) };
+      }
+      function startGesture() {
+        if (gesture && gesture.longTimer) clearTimeout(gesture.longTimer);
+        if (pts.size === 1) {
+          const p = [...pts.values()][0];
+          gesture = { mode: 'orbit', t0: performance.now(), x0: p.x, y0: p.y, moved: false, lx: p.x, ly: p.y };
+          gesture.longTimer = setTimeout(() => {
+            // Long press = touch, but the finger can still drag to orbit afterwards.
+            if (gesture && gesture.mode === 'orbit' && !gesture.moved) { gesture.longFired = true; touchObjectAt(gesture.x0, gesture.y0); }
+          }, 550);
+        } else if (pts.size >= 2) {
+          const m = mid();
+          gesture = { mode: 'two', midX: m.x, midY: m.y, pinchD: Math.max(m.d, 1), panX: 0, panY: 0 };
+        } else gesture = null;
+      }
+
+      el.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'touch') return; // desktop mouse/pen: unchanged
+        e.preventDefault();
+        enableTouchUI();
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        startGesture();
+      });
+      el.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'touch' || !pts.has(e.pointerId) || !gesture) return;
+        e.preventDefault();
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (gesture.mode === 'orbit' && pts.size === 1) {
+          if (Math.hypot(e.clientX - gesture.x0, e.clientY - gesture.y0) > 8) gesture.moved = true;
+          const ddx = e.clientX - gesture.lx, ddy = e.clientY - gesture.ly;
+          gesture.lx = e.clientX; gesture.ly = e.clientY;
+          if (gesture.moved && state.viewMode === 'GARDEN') {
+            touchCam.yaw -= ddx * ORBIT_K;
+            touchCam.el = THREE.MathUtils.clamp(touchCam.el + ddy * ORBIT_K, -0.35, 1.35);
+          }
+        } else if (gesture.mode === 'two' && pts.size >= 2 && state.viewMode === 'GARDEN') {
+          const m = mid();
+          // Pinch: zoom (fully in = first person)
+          touchCam.zoom = THREE.MathUtils.clamp(touchCam.zoom * (gesture.pinchD / Math.max(m.d, 1)), ZOOM_MIN, ZOOM_MAX);
+          gesture.pinchD = Math.max(m.d, 1);
+          // Two-finger swipe: detach the camera and move it freely
+          const mdx = m.x - gesture.midX, mdy = m.y - gesture.midY;
+          gesture.midX = m.x; gesture.midY = m.y;
+          gesture.panX += mdx; gesture.panY += mdy; // net swipe (pinch jitter cancels out)
+          if (touchCam.detached || Math.hypot(gesture.panX, gesture.panY) > 18) {
+            touchCam.detach();
+            touchCam.setFirstPerson(false);
+            if (touchCam.zoom < 0.35) touchCam.zoom = 0.35;
+            const s = 0.012 * Math.max(touchCam.zoom, 0.5) * CAM_BASE_LEN / 7;
+            const [rx, rz] = touchCam.right(), [fx, fz] = touchCam.forward();
+            touchCam.pivot.x += -rx * mdx * s + fx * -mdy * s;
+            touchCam.pivot.z += -rz * mdx * s + fz * -mdy * s;
+            touchCam.pivot.x = THREE.MathUtils.clamp(touchCam.pivot.x, -40, 40);
+            touchCam.pivot.z = THREE.MathUtils.clamp(touchCam.pivot.z, -40, 110);
+          }
+        }
+      });
+      function endPointer(e) {
+        if (e.pointerType !== 'touch' || !pts.has(e.pointerId)) return;
+        pts.delete(e.pointerId);
+        if (gesture && gesture.mode === 'orbit' && e.type === 'pointerup' && !gesture.moved && !gesture.longFired && performance.now() - gesture.t0 < 350) {
+          touchObjectAt(gesture.x0, gesture.y0);
+        }
+        if (gesture && gesture.longTimer) clearTimeout(gesture.longTimer);
+        if (pts.size === 0) gesture = null;
+        else { startGesture(); if (gesture) gesture.moved = true; } // lifting one finger of two: carry on orbiting, no tap
+      }
+      el.addEventListener('pointerup', endPointer);
+      el.addEventListener('pointercancel', endPointer);
+
+      // Keep the stick and reset button above the bottom bar / dialogue, hidden behind modals.
+      const touchRoot = document.getElementById('nv-touch');
+      const bar = document.querySelector('.bottom-bar');
+      const dlg = document.getElementById('dialogue-box');
+      let layoutTick = 0;
+      function layoutTouch() {
+        if (++layoutTick % 2 === 0 && root.classList.contains('nv-touch-ui')) {
+          const vh = window.innerHeight, vw = window.innerWidth;
+          const barTop = bar ? bar.getBoundingClientRect().top : vh;
+          const base = vh - barTop + 14;
+          let stickBottom = base, resetBottom = base;
+          if (dlg && getComputedStyle(dlg).display !== 'none') {
+            const dr = dlg.getBoundingClientRect();
+            // Lift a control only when the dialogue sits in its column (portrait); in landscape the
+            // dialogue is centred and the stick / reset button keep their spots at the sides.
+            if (dr.height && dr.left < stick.getBoundingClientRect().right + 6) stickBottom = Math.max(stickBottom, vh - dr.top + 10);
+            if (dr.height && dr.right > document.getElementById('nv-cam-reset').getBoundingClientRect().left - 6) resetBottom = Math.max(resetBottom, vh - dr.top + 10);
+          }
+          // Never push the stick under the top bar on short (landscape) screens.
+          const topBar = document.querySelector('.top-bar');
+          const topLimit = topBar ? topBar.getBoundingClientRect().bottom + 6 : 0;
+          stickBottom = Math.min(stickBottom, Math.max(base, vh - topLimit - 116));
+          resetBottom = Math.min(resetBottom, Math.max(base, vh - topLimit - 44));
+          if (stickId === null) root.style.setProperty('--nv-stick-bottom', Math.round(stickBottom) + 'px'); // never move the stick under a held finger
+          root.style.setProperty('--nv-reset-bottom', Math.round(resetBottom) + 'px');
+          const modalOpen = !!document.querySelector('.modal-card.visible');
+          touchRoot.classList.toggle('nv-hidden', modalOpen);
+          if (modalOpen && stickId !== null) { stickId = null; knob.style.transform = ''; window.NVGame.setMove(0, 0); }
+        }
+        requestAnimationFrame(layoutTouch);
+      }
+      requestAnimationFrame(layoutTouch);
+
+      window.NVGame.touchCam = touchCam;
+    })();
+
     applyViewMode();
     animate();
   </script>
