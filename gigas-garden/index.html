@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- My Room test link: ?stage=room opens the Infinity 6 room page straight away (same sign-in session). -->
+  <!-- Neon Vigil sign-in gate. Keep this tag when copying this file to gh-pages; the build and backend set data-mode. -->
+  <script src="../auth-gate.js" data-mode="google"></script>
+  <!-- My Room test link: ?stage=room opens the Infiniti 6 room page straight away (same sign-in session). -->
   <script>
     (function () {
       try {
-        if (new URLSearchParams(location.search).get('stage') === 'room') location.replace('../Infinity_6-rooms/');
+        if (new URLSearchParams(location.search).get('stage') === 'room') location.replace('../infiniti6-rooms/');
       } catch (e) { /* stay on the game */ }
     })();
   </script>
@@ -575,7 +577,6 @@
           <button class="hud-btn icon-btn active-tool" id="tool-btn" onclick="window.NVGame.cycleTool()" aria-label="Tool: Fists (press Q to cycle)" title="Tool: FISTS (Q to cycle)"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 12-8.4 8.4a2.1 2.1 0 0 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.9-1.9a2 2 0 0 1-.6-1.4V7l-2.3-2.3a6 6 0 0 0-4.2-1.7H9l.9.8A6.2 6.2 0 0 1 12 8.4V10l2 2h1.2a2 2 0 0 1 1.4.6l1.9 1.9"/></svg><span class="tool-glyph"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 4 0"/><path d="M8 8a2 2 0 0 1 4 0"/><path d="M12 8a2 2 0 0 1 4 0"/><path d="M16 9a2 2 0 0 1 4 0"/><path d="M4 9v5a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7V9"/><path d="M8 8v3"/><path d="M12 8v3"/><path d="M16 9v2"/><path d="M4 14h7a2 2 0 0 0 2-2"/></svg></span></button>
           <button class="hud-btn icon-btn" onclick="window.NVGame.toggleGridLog()" aria-label="Grid log" title="Grid log"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>
           <button class="hud-btn icon-btn" id="audio-btn" onclick="window.NVGame.toggleAudio()" aria-label="Sound" title="Sound: on" aria-pressed="true"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button>
-          <input id="theme-vol" type="range" min="0" max="1" step="0.05" value="0.8" aria-label="Music volume" title="Music volume" style="width:90px; accent-color:#00f0ff;">
         </div>
       </div>
     </header>
@@ -640,7 +641,7 @@
         <div id="gridlog-content" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
       </section>
 
-      <!-- 3b. BRIDGE CONSOLE menu: carry on at the Bridge, or go to My Room (Infinity_6-rooms) -->
+      <!-- 3b. BRIDGE CONSOLE menu: carry on at the Bridge, or go to My Room (infiniti6-rooms) -->
       <section id="console-modal" class="modal-card" role="dialog" aria-modal="false" aria-labelledby="console-title">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div class="modal-title" id="console-title" style="border:none; padding:0;">BRIDGE CONSOLE</div>
@@ -648,7 +649,7 @@
         </div>
         <div class="console-choices">
           <button class="hud-btn" type="button" id="console-bridge" onclick="window.NVGame.consoleBridge()">BRIDGE</button>
-          <a class="hud-btn" id="console-room" href="../Infinity_6-rooms/">MY ROOM</a>
+          <a class="hud-btn" id="console-room" href="../infiniti6-rooms/">MY ROOM</a>
         </div>
       </section>
 
@@ -933,8 +934,8 @@
        side-profile portrait (assets/portraits/<id>.png, 256 px) beside the text.
        anim: 'bob' = slight bob while the line types; 'glow' = glow pulse (holograms, no mouth flaps). */
     const SPEAKERS = {
-      hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa-idle.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
-      cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr-idle.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
+      hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
+      cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
       neon:    { name: 'NEON ULTRA',  portrait: 'assets/portraits/neon.png',   accent: '#ff1e8a', nameColor: '#ff1e8a', anim: 'bob' },
       val17:   { name: 'VAL 17',      portrait: 'assets/portraits/val17.png',  accent: '#ff6ec7', nameColor: '#ff6ec7', anim: 'bob' },
       praxia:  { name: 'PRAXIA',      portrait: 'assets/portraits/praxia.png', accent: '#ff1e8a', nameColor: '#ffb3dd', anim: 'glow' },
@@ -962,7 +963,7 @@
         name: 'BALT-SHELL CARRIER',
         caste: 'HAULER',
         powerSet: '+2 Carry Capacity per synced Hauler · Sync: DIG',
-        desc: 'Biological chitin carapace, 4% readable face, immune to acidic First Water. Moves fallen stone and salvage around the Infinity 6 hull.',
+        desc: 'Biological chitin carapace, 4% readable face, immune to acidic First Water. Moves fallen stone and salvage around the Infiniti 6 hull.',
         canSync: true
       },
       warden: {
@@ -1042,34 +1043,43 @@
     let audioUnlocked = false;
     let audioStopped = false;           // true after game_over until play_again
     const duckReasons = new Set();      // 'dialogue' | 'sync'
+
+    // Select sound (Mouse Click 1): plays once when the player picks an
+    // option that changes the page (MY ROOM navigates to the My Room page).
+    // It is a UI click, never looped, and it respects the game's audio mute.
+    // In-game modal choices (Strike/Guard/Sync, Build, Console, Grid Log,
+    // Chat) change game state, not the page, so they do NOT play it.
+    // There is no "Back to Hub" option in the game in this version.
+    const SELECT_AUDIO_PATH = 'assets/neon-vigil-mouse-click-1.wav';
+    const selectAudio = new Audio();
+    selectAudio.src = SELECT_AUDIO_PATH;
+    selectAudio.loop = false;
+    selectAudio.preload = 'auto';
+    selectAudio.volume = 0.5;
+    selectAudio.load();
+    function playSelectSound() {
+      if (!audioEnabled || audioStopped || hostMuted) return;
+      try { selectAudio.currentTime = 0; const p = selectAudio.play(); if (p && p.catch) p.catch(() => {}); } catch { /* ignore */ }
+    }
+    // MY ROOM is the game's only page-changing selection: it navigates to
+    // the My Room page. Play the select sound once, then navigate after a
+    // short delay so the click is heard.
+    (function () {
+      const roomLink = document.getElementById('console-room');
+      if (!roomLink) return;
+      roomLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        playSelectSound();
+        const href = roomLink.getAttribute('href');
+        setTimeout(function () { location.href = href; }, 200);
+      });
+    })();
     let fadeRaf = 0;
 
-    // Music volume (Oct 28, 2026): user slider, 0-1, saved in this
-    // browser. It scales the full and ducked theme levels, so ducking
-    // still works at any volume, and 0 is effectively muted.
-    let themeVolume = 0.8;
-    try {
-      const savedVol = Number(localStorage.getItem('nv-theme-volume'));
-      if (Number.isFinite(savedVol)) themeVolume = Math.min(1, Math.max(0, savedVol));
-    } catch { /* storage unavailable: keep default */ }
     function audioTargetLevel() {
       if (!audioEnabled || audioStopped || hostMuted) return 0;
-      return (duckReasons.size ? AUDIO_LEVEL_DUCK : AUDIO_LEVEL_FULL) * themeVolume;
+      return duckReasons.size ? AUDIO_LEVEL_DUCK : AUDIO_LEVEL_FULL;
     }
-    function setThemeVolume(v) {
-      themeVolume = Math.min(1, Math.max(0, Number(v) || 0));
-      try { localStorage.setItem('nv-theme-volume', String(themeVolume)); } catch { /* ignore */ }
-      const slider = document.getElementById('theme-vol');
-      if (slider) slider.value = String(themeVolume);
-      if (audioUnlocked && audioEnabled && !audioStopped && !hostMuted) fadeThemeTo(audioTargetLevel());
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      const slider = document.getElementById('theme-vol');
-      if (slider) {
-        slider.value = String(themeVolume);
-        slider.addEventListener('input', (e) => setThemeVolume(e.target.value));
-      }
-    });
 
     function fadeThemeTo(target, onDone) {
       cancelAnimationFrame(fadeRaf);
@@ -1165,7 +1175,7 @@
     const container = document.getElementById('viewport-container');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x07030d);
-    // Exterior violet-pink fog (kept off when inside Infinity 6 deck). Lighter density;
+    // Exterior violet-pink fog (kept off when inside Infiniti 6 deck). Lighter density;
     // the Drive plates ignore fog and use their own haze gradient instead.
     const gardenFog = new THREE.FogExp2(0xc23d8f, 0.012);
 
@@ -1294,7 +1304,7 @@
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
 
-    // Zone 1: Infinity 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
+    // Zone 1: Infiniti 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
     const deckFloor = new THREE.Mesh(
       new THREE.BoxGeometry(14, 0.5, 20),
       new THREE.MeshStandardMaterial({ color: 0x120c1f, metalness: 0.7, roughness: 0.3 })
@@ -2070,7 +2080,7 @@
     playerGroup.position.set(0, 0, -16);
     scene.add(playerGroup);
 
-        function buildProceduralNeonUltra() {
+    function buildProceduralNeonUltra() {
       const g = new THREE.Group();
       // Legs & Boots
       const legs = new THREE.Mesh(
@@ -2108,9 +2118,8 @@
     }
 
     const proceduralPlayer = buildProceduralNeonUltra();
-    // Emergency fallback ONLY, not added to the scene: the player is VAL 17
-    // (User's Oct 28, 2026: the game screen should be Val, not Neon), so the
-    // scene starts empty until the Val GLB mounts — no Neon on screen first.
+    playerGroup.add(proceduralPlayer);
+    toonify(proceduralPlayer);
 
     const MODEL_HEIGHT_TALL = 2.3;   // 6'3" in world units (matches procedural Neon)
     const MODEL_HEIGHT_BUG = 1.5;
@@ -2138,14 +2147,13 @@
     }
 
     // Probe Flow Studio GLB (tiered: hi/lite) -> Procedural
-    // PLAYER IS VAL 17 (User's Oct 28, 2026: game screen should be Val, not Neon).
     function probePlayerModel() {
       loadTieredGLB(
-        FLOW_STUDIO_MANIFEST.valGLB,
-        FLOW_STUDIO_MANIFEST.valLite,
+        FLOW_STUDIO_MANIFEST.neonUltraPrimary,
+        FLOW_STUDIO_MANIFEST.neonUltraLite,
         (gltf) => { mountPlayerModel(gltf); },
         () => {
-          // both Val copies failed: nothing mounts — no Neon fallback, the player stays empty rather than showing Neon.
+          // both Flow Studio copies failed (or a LOD swap failed): keep whatever is mounted, else procedural Neon Ultra
         }
       );
     }
@@ -2166,10 +2174,8 @@
       }, () => { /* procedural Praxia stays */ });
     }
 
-    // VAL-17: was moved into the transparent VAL-18 pod (Oct 24, 2026 ruling).
-    // SUPERSEDED Oct 28, 2026: Val is now the PLAYER, so there is no second Val
-    // in the pod — probeValModel is defined but NOT called, and the pod stays
-    // empty until she says who/what goes there. Nothing renders if both copies fail to load.
+    // VAL-17: moved into the transparent VAL-18 pod (User's ruling Oct 24, 2026: "Move the current Val 17 to the pod").
+    // No longer standing beside Praxia — one VAL-17 instance only, inside the pod. Nothing renders if both copies fail to load.
     function probeValModel() {
       loadTieredGLB(FLOW_STUDIO_MANIFEST.valGLB, FLOW_STUDIO_MANIFEST.valLite, (gltf) => {
         const model = fitModel(gltf.scene, 1.8);
@@ -2184,7 +2190,7 @@
     }
     probePlayerModel();
     probePraxiaModel();
-    // probeValModel() NOT called: Val is the player now, no duplicate Val in the pod.
+    probeValModel();
 
     // NWD logo: local GLB converted from the Dropbox letters OBJ
     // (assets/nwd-logo.glb). Mounted above the ship-hub walkway, facing
@@ -2228,8 +2234,7 @@
         return;
       }
       modelGuard.done = true;
-      // Slow even on lite: keep the Val player model anyway — the player must
-      // be Val, so this no longer swaps to the procedural Neon fallback.
+      if (glbMounts.player) { playerGroup.remove(glbMounts.player); playerGroup.add(proceduralPlayer); glbMounts.player = null; }
       if (glbMounts.praxia) { praxiaGroup.remove(glbMounts.praxia); praxiaProcedural.visible = true; glbMounts.praxia = null; }
       if (glbMounts.val) { podGroup.remove(glbMounts.val); glbMounts.val = null; }
     }
@@ -2315,13 +2320,9 @@
       const sp = SPEAKERS[id] || SPEAKERS.gridlog;
       const portraitId = item.portrait || id;
       const portrait = (SPEAKERS[portraitId] && SPEAKERS[portraitId].portrait) || null;
-      return { id, portraitId, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
+      return { id, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
     }
-    const TALKING_PORTRAITS = { hexa: 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
-    let currentIdlePortrait = null;
     function stopTyping() {
-      const im2 = document.getElementById('dialogue-portrait-img');
-      if (im2 && currentIdlePortrait) im2.src = currentIdlePortrait;
       if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
       const t = document.getElementById('dialogue-text');
       t.innerHTML = typeUnits.join('');
@@ -2332,8 +2333,6 @@
       const box = document.getElementById('dialogue-box');
       if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
       if (state.dialogueQueue.length === 0) {
-        const im0 = document.getElementById('dialogue-portrait-img');
-        if (im0 && currentIdlePortrait) im0.src = currentIdlePortrait;
         box.style.display = 'none';
         box.classList.remove('speaking');
         duckAudio(false);
@@ -2351,9 +2350,7 @@
       if (who.portrait) {
         box.classList.add('has-portrait');
         img.onerror = () => box.classList.remove('has-portrait'); // missing art: text-only line
-        currentIdlePortrait = who.portrait;
-        img.src = who.portrait;
-        if (TALKING_PORTRAITS[who.portraitId]) img.src = TALKING_PORTRAITS[who.portraitId];
+        if (img.getAttribute('src') !== who.portrait) img.src = who.portrait;
         img.alt = `${who.label} portrait`;
       } else {
         box.classList.remove('has-portrait');
@@ -2743,7 +2740,6 @@
         updateHUD();
       },
 
-
       cycleTool() {
         state.equippedToolIdx = (state.equippedToolIdx + 1) % state.toolsUnlocked.length;
         updateHUD();
@@ -2762,10 +2758,6 @@
 
       toggleAudio() {
         setAudioEnabled(!audioEnabled);
-      },
-
-      setThemeVolume(v) {
-        setThemeVolume(v);
       },
 
       setMove(x, z) {
@@ -3050,35 +3042,14 @@
           if (!res.ok) throw new Error(`chat read failed: ${res.status}`);
           const rows = await res.json();
           rows.reverse();
-          const AVATARS = { hexa: 'assets/portraits/hexa-idle.png', 'hexa sigil': 'assets/portraits/hexa-idle.png', cyphr: 'assets/portraits/cyphr-idle.png' };
-          const TALKING_AVATARS = { hexa: 'assets/portraits/hexa-animated.gif', 'hexa sigil': 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
-          if (!state.chatTypedIds) state.chatTypedIds = new Set();
+          const AVATARS = { hexa: 'assets/portraits/hexa.png', 'hexa sigil': 'assets/portraits/hexa.png', cyphr: 'assets/portraits/cyphr.png' };
           box.innerHTML = rows.length ? rows.map(m => {
             const av = AVATARS[(m.user_name || '').toLowerCase()];
             const when = m.created_at ? new Date(m.created_at).toLocaleString() : '';
-            const avHtml = av ? `<img class="chat-avatar" src="${av}" alt="" width="32" height="32" style="border-radius:50%; flex:none;">` : '';
-            const mid = m.id != null ? String(m.id) : ((m.created_at || '') + '|' + (m.user_name || '') + '|' + (m.body || ''));
-            return `<div data-chat-id="${esc(mid)}" style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div class="chat-body" style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
+            const avHtml = av ? `<img src="${av}" alt="" width="32" height="32" style="border-radius:50%; flex:none;">` : '';
+            return `<div style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
           }).join('') : '<div style="color:var(--silver);">No messages in the room yet.</div>';
           box.scrollTop = box.scrollHeight;
-          // Chat is live talking too — but they are not typing, they are thinking.
-          // A new Hexa/Cyphr thought arrives whole (no fake typing); its avatar
-          // animates as a thinking beat, then settles back to mouthless idle.
-          if (rows.length) {
-            const last = rows[rows.length - 1];
-            const key = (last.user_name || '').toLowerCase();
-            const mid = last.id != null ? String(last.id) : ((last.created_at || '') + '|' + (last.user_name || '') + '|' + (last.body || ''));
-            if (TALKING_AVATARS[key] && !state.chatTypedIds.has(mid)) {
-              state.chatTypedIds.add(mid);
-              const el = box.querySelector('[data-chat-id="' + mid.replace(/"/g, '') + '"]');
-              const avEl = el ? el.querySelector('.chat-avatar') : null;
-              if (avEl) {
-                const idleSrc = AVATARS[key];
-                avEl.src = TALKING_AVATARS[key];
-                setTimeout(() => { avEl.src = idleSrc; }, 3000);
-              }
-            }
-          }
         } catch (e) {
           box.innerHTML = '<div style="color:var(--magenta);">Chat could not load. Check connection and try again.</div>';
         }
@@ -3379,10 +3350,7 @@
       const coarseMq = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
       function enableTouchUI() { root.classList.add('nv-touch-ui'); }
       function evalTouchUI() {
-        // iPad (controls LOCK, Oct 28, 2026): iPadOS reports a Mac-style
-        // platform with touch points, so treat that as a touch device too.
-        const isIPad = navigator.maxTouchPoints > 0 && navigator.platform === 'MacIntel';
-        if (isIPad || (coarseMq && coarseMq.matches) || (navigator.maxTouchPoints > 0 && window.matchMedia && window.matchMedia('(hover: none)').matches)) enableTouchUI();
+        if ((coarseMq && coarseMq.matches) || (navigator.maxTouchPoints > 0 && window.matchMedia && window.matchMedia('(hover: none)').matches)) enableTouchUI();
       }
       evalTouchUI();
       if (coarseMq && coarseMq.addEventListener) coarseMq.addEventListener('change', evalTouchUI);
