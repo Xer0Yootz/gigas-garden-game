@@ -1104,6 +1104,37 @@
     let audioUnlocked = false;
     let audioStopped = false;           // true after game_over until play_again
     const duckReasons = new Set();      // 'dialogue' | 'sync'
+
+    // Select sound (Mouse Click 1): plays once when the player picks an
+    // option that changes the page (MY ROOM navigates to the My Room page).
+    // It is a UI click, never looped, and it respects the game's audio mute.
+    // In-game modal choices (Strike/Guard/Sync, Build, Console, Grid Log,
+    // Chat) change game state, not the page, so they do NOT play it.
+    // There is no "Back to Hub" option in the game in this version.
+    const SELECT_AUDIO_PATH = 'assets/neon-vigil-mouse-click-1.wav';
+    const selectAudio = new Audio();
+    selectAudio.src = SELECT_AUDIO_PATH;
+    selectAudio.loop = false;
+    selectAudio.preload = 'auto';
+    selectAudio.volume = 0.5;
+    selectAudio.load();
+    function playSelectSound() {
+      if (!audioEnabled || audioStopped || hostMuted) return;
+      try { selectAudio.currentTime = 0; const p = selectAudio.play(); if (p && p.catch) p.catch(() => {}); } catch { /* ignore */ }
+    }
+    // MY ROOM is the game's only page-changing selection: it navigates to
+    // the My Room page. Play the select sound once, then navigate after a
+    // short delay so the click is heard.
+    (function () {
+      const roomLink = document.getElementById('console-room');
+      if (!roomLink) return;
+      roomLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        playSelectSound();
+        const href = roomLink.getAttribute('href');
+        setTimeout(function () { location.href = href; }, 200);
+      });
+    })();
     let fadeRaf = 0;
 
     // Music volume (Oct 28, 2026): user slider, 0-1, saved in this
