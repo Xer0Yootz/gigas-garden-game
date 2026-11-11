@@ -858,6 +858,7 @@
     import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
     import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+    import { createSkysphere } from './nv-skysphere.js';
 
     /* =========================================================================
        1. ASSET MANIFESTS FOR GROK BOT & FLOW STUDIO PIPELINE
@@ -867,8 +868,13 @@
       // The -lite copies are lower LOD (fewer triangles, 1024 px base color, no normal map) for the lite tier.
       neonUltraPrimary: 'assets/neon-ultra.glb',      // Neon Ultra, 6'3"
       neonUltraLite: 'assets/neon-ultra-lite.glb',
-      praxiaGLB: 'assets/praxia.glb',                 // Praxia, 6'3"
-      praxiaLite: 'assets/praxia-lite.glb',
+      praxiaGLB: 'assets/praxia.glb',                 // Praxia, 6'3" — Tripo model (Nov 11, 2026)
+      // praxiaLite = the SAME Tripo file: there is no separate -lite LOD.
+      // The old Flow Studio praxia-lite.glb was removed with the swap.
+      // A lite LOD would need geometry edits, and her eyes are NEVER edited,
+      // so lite tier loads the same Tripo model; the procedural stand-in
+      // remains the slow-device fallback (watchModelCost, below).
+      praxiaLite: 'assets/praxia.glb',
       valGLB: 'assets/val17.glb',                     // VAL-17 drone body (new slot, no procedural stand-in)
       valLite: 'assets/val17-lite.glb',
       // Creature slots: CC0 Quaternius bees until Flow Studio chitin bugs land (credits in assets/CREDITS.md)
@@ -1199,7 +1205,10 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 260);
+    // Camera far raised Nov 11, 2026 for the NV Skysphere port: the dome is
+    // 10x the main-game world (worldRadius 120 m -> dome 1,200 m), so the
+    // far plane must clear it (was 260, which clipped the Level 2 sky).
+    const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 2600);
 
     // Camera-inside auto-hide: hide any mesh whose bounding sphere contains the camera,
     // so walking through an object never turns the view inside-out. Meshes flagged
@@ -1298,6 +1307,29 @@
     sunBack.position.set(0, 9, 95);
     sunBack.target.position.set(0, 0, 30);
     scene.add(hemiLight, deckFill, cyanKey, magentaRim, sunBack, sunBack.target);
+
+    // --- Sky: NV Skysphere port (Nov 11, 2026, dome + sun in EVERY level) ----
+    // Same module as Level 2 (./nv-skysphere.js), rescaled for the main
+    // game's smaller world: zones span z -18 to 68, x -16 to 16, so the
+    // world extent is ~120 m (dome 10x = 1,200 m) instead of Level 2's
+    // 2 mi. Sun distance 300 m keeps its ~0.1 rad angular size, beyond
+    // the striped-sun backdrop plate at z = 72. azimuthOffset -PI turns
+    // midday toward +Z (the garden / plate side), matching the existing
+    // sunBack light at (0, 9, 95) — Level 2's midday is toward -Z.
+    // Pink-to-purple gradient, moving striped sun, NO cyan in the sky.
+    // sunBack + hemiLight are driven by the sun (position/colour/strength
+    // follow its elevation); cyanKey / magentaRim / deckFill are untouched.
+    // scene.background stays as the dark fallback behind the dome.
+    const skysphere = createSkysphere(THREE, {
+      worldRadius: 120,
+      sunDistance: 300,
+      azimuthOffset: -Math.PI,
+      timeOfDay: 0.5,
+      sunLight: sunBack,
+      hemiLight,
+    });
+    scene.add(skysphere.group);
+    window.__skysphere = skysphere; // verification handle
     const poolGlow = new THREE.PointLight(0xb8ff00, 22, 14, 2);
     poolGlow.position.set(8, 1.2, 38);
     const biolumeA = new THREE.PointLight(0x22f5ff, 26, 18, 2);
@@ -3323,6 +3355,7 @@
       const bugDt = Math.min(0.1, (nowMs - (animate.lastBug || nowMs)) / 1000);
       animate.lastBug = nowMs;
       creatureMixers.forEach((m) => m.update(bugDt));
+      skysphere.update(bugDt); // sun rises/sets, clouds drift (NV Skysphere)
       updateBabyPigekPet(t);
       mistTime.value = t * MIST_MOTION;
       if (mistGroup.visible) {
