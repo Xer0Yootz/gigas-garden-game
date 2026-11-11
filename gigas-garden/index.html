@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- My Room test link: ?stage=room opens the Infiniti 6 room page straight away (same sign-in session). -->
+  <!-- Neon Vigil sign-in gate. Keep this tag when copying this file to gh-pages; the build and backend set data-mode. -->
+  <script src="../auth-gate.js" data-mode="google"></script>
+  <!-- My Room test link: ?stage=room opens the Infinity 6 room page straight away (same sign-in session). -->
   <script>
     (function () {
       try {
-        if (new URLSearchParams(location.search).get('stage') === 'room') location.replace('../infiniti6-rooms/');
+        if (new URLSearchParams(location.search).get('stage') === 'room') location.replace('../Infinity_6-rooms/');
       } catch (e) { /* stay on the game */ }
     })();
   </script>
@@ -371,7 +373,7 @@
     #dialogue-box {
       pointer-events: auto;
       position: absolute;
-      top: 12px;
+      bottom: 12px;
       left: 12px;
       right: 12px;
       max-width: 560px;
@@ -567,6 +569,7 @@
           <span class="pill" id="zone-pill">ZONE: INFINITI 6 DECK</span>
           <span class="pill" id="hp-pill">INTEGRITY: 100%</span>
           <span class="pill" id="carry-pill">CARRY: 0/10</span>
+          <span class="pill" id="pet-pill">PET: BABY PIGEK · FOLLOW · STAGE 1/3</span>
           <span class="pill magenta" id="colony-pill">COLONY: 0</span>
           <span class="pill" id="materials-pill">FIBER 0 · CRYSTAL 0 · SCRAP 0</span>
         </div>
@@ -575,6 +578,7 @@
           <button class="hud-btn icon-btn active-tool" id="tool-btn" onclick="window.NVGame.cycleTool()" aria-label="Tool: Fists (press Q to cycle)" title="Tool: FISTS (Q to cycle)"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 12-8.4 8.4a2.1 2.1 0 0 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.9-1.9a2 2 0 0 1-.6-1.4V7l-2.3-2.3a6 6 0 0 0-4.2-1.7H9l.9.8A6.2 6.2 0 0 1 12 8.4V10l2 2h1.2a2 2 0 0 1 1.4.6l1.9 1.9"/></svg><span class="tool-glyph"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 4 0"/><path d="M8 8a2 2 0 0 1 4 0"/><path d="M12 8a2 2 0 0 1 4 0"/><path d="M16 9a2 2 0 0 1 4 0"/><path d="M4 9v5a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7V9"/><path d="M8 8v3"/><path d="M12 8v3"/><path d="M16 9v2"/><path d="M4 14h7a2 2 0 0 0 2-2"/></svg></span></button>
           <button class="hud-btn icon-btn" onclick="window.NVGame.toggleGridLog()" aria-label="Grid log" title="Grid log"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>
           <button class="hud-btn icon-btn" id="audio-btn" onclick="window.NVGame.toggleAudio()" aria-label="Sound" title="Sound: on" aria-pressed="true"><svg class="nv-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button>
+          <input id="theme-vol" type="range" min="0" max="1" step="0.05" value="0.8" aria-label="Music volume" title="Music volume" style="width:90px; accent-color:#00f0ff;">
         </div>
       </div>
     </header>
@@ -639,7 +643,7 @@
         <div id="gridlog-content" style="max-height:260px; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:8px;"></div>
       </section>
 
-      <!-- 3b. BRIDGE CONSOLE menu: carry on at the Bridge, or go to My Room (infiniti6-rooms) -->
+      <!-- 3b. BRIDGE CONSOLE menu: carry on at the Bridge, or go to My Room (Infinity_6-rooms) -->
       <section id="console-modal" class="modal-card" role="dialog" aria-modal="false" aria-labelledby="console-title">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div class="modal-title" id="console-title" style="border:none; padding:0;">BRIDGE CONSOLE</div>
@@ -647,7 +651,7 @@
         </div>
         <div class="console-choices">
           <button class="hud-btn" type="button" id="console-bridge" onclick="window.NVGame.consoleBridge()">BRIDGE</button>
-          <a class="hud-btn" id="console-room" href="../infiniti6-rooms/">MY ROOM</a>
+          <a class="hud-btn" id="console-room" href="../Infinity_6-rooms/">MY ROOM</a>
         </div>
       </section>
 
@@ -852,7 +856,8 @@
       neonUltraLite: 'assets/neon-ultra-lite.glb',
       praxiaGLB: 'assets/praxia.glb',                 // Praxia, 6'3"
       praxiaLite: 'assets/praxia-lite.glb',
-      // (VAL-18 pod manifest entries removed Nov 11, 2026 with the whole stasis pod — val17.glb no longer loaded.)
+      valGLB: 'assets/val17.glb',                     // VAL-17 drone body (new slot, no procedural stand-in)
+      valLite: 'assets/val17-lite.glb',
       // Creature slots: CC0 Quaternius bees until Flow Studio chitin bugs land (credits in assets/CREDITS.md)
       creatureGLB: {
         hauler: 'assets/bug-armabee.glb', // "Armabee Evolved", cyan, biggest
@@ -861,30 +866,6 @@
         diver: 'assets/bug-bee.glb'       // "Bee", acid lime, smallest
       }
     };
-
-    // NEON RIGGED TEST (Nov 8, 2026, User's voice call: rigged Neon with
-    // hair + outfit already on it goes into the game AS IS as the user's
-    // avatar just to test for now). ?stage=neon-rigged swaps the player
-    // slot to assets/neon-ultra-rigged-test-walk.glb (Tripo Neon Ultra
-    // Version One, rigged Nov 8: 1 skin, 65 joints, 3 animations —
-    // idle.001 15.33s + Psionic Idle 4.96s + Walk 1.03s, in-place, added
-    // Nov 11, 2026 by free Mixamo retarget — zero Tripo credits).
-    // The 2-clip file assets/neon-ultra-rigged-test.glb is kept on disk
-    // as fallback. Default game is unchanged: without the flag, the old
-    // static neon-ultra.glb still loads. Test only, not a canon lock,
-    // not the final rig (Tripo AutoRig is posing-only per Jasmine's
-    // rule). Hair-removal into the bald base is a LATER step — NOT
-    // done here.
-    const NEON_RIGGED_TEST = new URLSearchParams(location.search).get('stage') === 'neon-rigged';
-    if (NEON_RIGGED_TEST) {
-      FLOW_STUDIO_MANIFEST.neonUltraPrimary = 'assets/neon-ultra-rigged-test-walk.glb';
-      FLOW_STUDIO_MANIFEST.neonUltraLite = 'assets/neon-ultra-rigged-test-walk.glb';
-      console.log('[neon-rigged-test] player slot = rigged Neon test avatar');
-    }
-
-    // VAL RIGGED TEST — REMOVED from this live-push variant Nov 11, 2026:
-    // ?stage=val-rigged stays staged-only (User's call: Val stays staged).
-    // The staged copy keeps it; this variant has no Val player flag at all.
 
     // Shared Drive plates, web-optimized copies stored flat in the assets folder (external files, never inlined)
     const DRIVE_BACKDROP_MANIFEST = {
@@ -955,8 +936,8 @@
        side-profile portrait (assets/portraits/<id>.png, 256 px) beside the text.
        anim: 'bob' = slight bob while the line types; 'glow' = glow pulse (holograms, no mouth flaps). */
     const SPEAKERS = {
-      hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
-      cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
+      hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa-idle.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
+      cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr-idle.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
       neon:    { name: 'NEON ULTRA',  portrait: 'assets/portraits/neon.png',   accent: '#ff1e8a', nameColor: '#ff1e8a', anim: 'bob' },
       val17:   { name: 'VAL 17',      portrait: 'assets/portraits/val17.png',  accent: '#ff6ec7', nameColor: '#ff6ec7', anim: 'bob' },
       praxia:  { name: 'PRAXIA',      portrait: 'assets/portraits/praxia.png', accent: '#ff1e8a', nameColor: '#ffb3dd', anim: 'glow' },
@@ -984,7 +965,7 @@
         name: 'BALT-SHELL CARRIER',
         caste: 'HAULER',
         powerSet: '+2 Carry Capacity per synced Hauler · Sync: DIG',
-        desc: 'Biological chitin carapace, 4% readable face, immune to acidic First Water. Moves fallen stone and salvage around the Infiniti 6 hull.',
+        desc: 'Biological chitin carapace, 4% readable face, immune to acidic First Water. Moves fallen stone and salvage around the Infinity 6 hull.',
         canSync: true
       },
       warden: {
@@ -1064,43 +1045,34 @@
     let audioUnlocked = false;
     let audioStopped = false;           // true after game_over until play_again
     const duckReasons = new Set();      // 'dialogue' | 'sync'
-
-    // Select sound (Mouse Click 1): plays once when the player picks an
-    // option that changes the page (MY ROOM navigates to the My Room page).
-    // It is a UI click, never looped, and it respects the game's audio mute.
-    // In-game modal choices (Strike/Guard/Sync, Build, Console, Grid Log,
-    // Chat) change game state, not the page, so they do NOT play it.
-    // There is no "Back to Hub" option in the game in this version.
-    const SELECT_AUDIO_PATH = 'assets/neon-vigil-mouse-click-1.wav';
-    const selectAudio = new Audio();
-    selectAudio.src = SELECT_AUDIO_PATH;
-    selectAudio.loop = false;
-    selectAudio.preload = 'auto';
-    selectAudio.volume = 0.5;
-    selectAudio.load();
-    function playSelectSound() {
-      if (!audioEnabled || audioStopped || hostMuted) return;
-      try { selectAudio.currentTime = 0; const p = selectAudio.play(); if (p && p.catch) p.catch(() => {}); } catch { /* ignore */ }
-    }
-    // MY ROOM is the game's only page-changing selection: it navigates to
-    // the My Room page. Play the select sound once, then navigate after a
-    // short delay so the click is heard.
-    (function () {
-      const roomLink = document.getElementById('console-room');
-      if (!roomLink) return;
-      roomLink.addEventListener('click', function (e) {
-        e.preventDefault();
-        playSelectSound();
-        const href = roomLink.getAttribute('href');
-        setTimeout(function () { location.href = href; }, 200);
-      });
-    })();
     let fadeRaf = 0;
 
+    // Music volume (Oct 28, 2026): user slider, 0-1, saved in this
+    // browser. It scales the full and ducked theme levels, so ducking
+    // still works at any volume, and 0 is effectively muted.
+    let themeVolume = 0.8;
+    try {
+      const savedVol = Number(localStorage.getItem('nv-theme-volume'));
+      if (Number.isFinite(savedVol)) themeVolume = Math.min(1, Math.max(0, savedVol));
+    } catch { /* storage unavailable: keep default */ }
     function audioTargetLevel() {
       if (!audioEnabled || audioStopped || hostMuted) return 0;
-      return duckReasons.size ? AUDIO_LEVEL_DUCK : AUDIO_LEVEL_FULL;
+      return (duckReasons.size ? AUDIO_LEVEL_DUCK : AUDIO_LEVEL_FULL) * themeVolume;
     }
+    function setThemeVolume(v) {
+      themeVolume = Math.min(1, Math.max(0, Number(v) || 0));
+      try { localStorage.setItem('nv-theme-volume', String(themeVolume)); } catch { /* ignore */ }
+      const slider = document.getElementById('theme-vol');
+      if (slider) slider.value = String(themeVolume);
+      if (audioUnlocked && audioEnabled && !audioStopped && !hostMuted) fadeThemeTo(audioTargetLevel());
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const slider = document.getElementById('theme-vol');
+      if (slider) {
+        slider.value = String(themeVolume);
+        slider.addEventListener('input', (e) => setThemeVolume(e.target.value));
+      }
+    });
 
     function fadeThemeTo(target, onDone) {
       cancelAnimationFrame(fadeRaf);
@@ -1196,7 +1168,7 @@
     const container = document.getElementById('viewport-container');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x07030d);
-    // Exterior violet-pink fog (kept off when inside Infiniti 6 deck). Lighter density;
+    // Exterior violet-pink fog (kept off when inside Infinity 6 deck). Lighter density;
     // the Drive plates ignore fog and use their own haze gradient instead.
     const gardenFog = new THREE.FogExp2(0xc23d8f, 0.012);
 
@@ -1325,7 +1297,7 @@
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
 
-    // Zone 1: Infiniti 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
+    // Zone 1: Infinity 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
     const deckFloor = new THREE.Mesh(
       new THREE.BoxGeometry(14, 0.5, 20),
       new THREE.MeshStandardMaterial({ color: 0x120c1f, metalness: 0.7, roughness: 0.3 })
@@ -2062,10 +2034,36 @@
     let praxiaSceneStartedAt = 0;
     let praxiaReturnAt = 0;
 
-    // VAL-18 Stasis Pod — REMOVED Nov 11, 2026 (User's order: remove the whole pod, Val and shell).
-    // The transparent pod shell (cylinder, caps, base, trim) at (4.2, 0, -8) and the
-    // VAL-17 model inside it are gone from the game. assets/val17.glb and
-    // assets/val17-lite.glb stay on disk, just no longer loaded.
+    // VAL-18 Stasis Pod, TRANSPARENT with the model inside (User's ruling Oct 24, 2026; "Just use Val 17" for the model)
+    const podGroup = new THREE.Group();
+    podGroup.position.set(4.2, 0, -8);
+    const podBody = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.7, 0.7, 2.2, 16),
+      new THREE.MeshStandardMaterial({ color: 0xe8b4d8, metalness: 0.6, roughness: 0.25, transparent: true, opacity: 0.28 })
+    );
+    podBody.position.y = 1.5;
+    const podCapTop = new THREE.Mesh(
+      new THREE.SphereGeometry(0.7, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2),
+      new THREE.MeshStandardMaterial({ color: 0xff1e8a, metalness: 0.5, roughness: 0.3 })
+    );
+    podCapTop.position.y = 2.6;
+    const podCapBottom = podCapTop.clone();
+    podCapBottom.rotation.x = Math.PI;
+    podCapBottom.position.y = 0.4;
+    const podBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.95, 1.05, 0.4, 16),
+      new THREE.MeshStandardMaterial({ color: 0x1a1a2e, metalness: 0.7, roughness: 0.4 })
+    );
+    podBase.position.y = 0.2;
+    const podTrim = new THREE.Mesh(
+      new THREE.TorusGeometry(0.72, 0.05, 8, 24),
+      new THREE.MeshBasicMaterial({ color: NEON_HDR(0xff1e8a, 1.8) })
+    );
+    podTrim.rotation.x = Math.PI / 2;
+    podTrim.position.y = 1.5;
+    podGroup.add(podBody, podCapTop, podCapBottom, podBase, podTrim);
+    worldGroup.add(podGroup);
+    interactables.push({ id: 'val18_pod', label: 'VAL-18 Stasis Pod', group: podGroup, x: 4.2, z: -8, active: true });
 
     /* =========================================================================
        7. PLAYER SLOT: NEON ULTRA (6'3", Midnight Black Skin, Open Face, No Visor,
@@ -2074,6 +2072,78 @@
     const playerGroup = new THREE.Group();
     playerGroup.position.set(0, 0, -16);
     scene.add(playerGroup);
+
+    /* =========================================================================
+       BABY PIGEK PET PROTOTYPE (Oct 28, 2026) — baby stage only.
+       Reverse-engineered from the ChatGPT pet sprites: chibi look translated
+       to low-poly primitives — huge round head, pink crest, giant pink cheek
+       pouches, mint-green wing fades, curled feathered tail, bare pink neck,
+       no jewelry. Follows the player, hop/waddles, perches when idle.
+       Growth stages baby -> adolescent -> rideable adult are NOT built here;
+       only stage 1 (baby) exists in this prototype.
+       ========================================================================= */
+    const petState = { enabled: true, mode: 'FOLLOW', idleMs: 0, lastPlayerX: 0, lastPlayerZ: -16 };
+    const petGroup = new THREE.Group();
+    {
+      const white = new THREE.MeshStandardMaterial({ color: 0xf5f2f0, roughness: 0.9 });
+      const pink = new THREE.MeshStandardMaterial({ color: 0xff5da2, roughness: 0.8 });
+      const cheekPink = new THREE.MeshStandardMaterial({ color: 0xffb3c2, roughness: 0.8 });
+      const eyePink = new THREE.MeshStandardMaterial({ color: 0xe0218a, roughness: 0.6 });
+      const green = new THREE.MeshStandardMaterial({ color: 0x9ed8a8, roughness: 0.9 });
+      const grey = new THREE.MeshStandardMaterial({ color: 0x8a8a92, roughness: 0.9 });
+      const add = (geo, mat, x, y, z, sx = 1, sy = 1, sz = 1) => {
+        const m = new THREE.Mesh(geo, mat);
+        m.position.set(x, y, z); m.scale.set(sx, sy, sz);
+        petGroup.add(m); return m;
+      };
+      add(new THREE.SphereGeometry(0.42, 20, 16), white, 0, 0.45, 0, 1, 0.9, 0.9); // body
+      add(new THREE.SphereGeometry(0.32, 20, 16), white, 0, 0.95, 0.08); // head
+      add(new THREE.CylinderGeometry(0.12, 0.14, 0.18, 10), cheekPink, 0, 0.72, 0.05); // bare neck
+      for (let i = -2; i <= 2; i++) { // pink crest spikes
+        const c = add(new THREE.ConeGeometry(0.06, 0.24, 6), pink, i * 0.09, 1.24, 0.02);
+        c.rotation.z = -i * 0.25;
+      }
+      add(new THREE.SphereGeometry(0.12, 14, 12), cheekPink, -0.26, 0.90, 0.30); // cheek pouches
+      add(new THREE.SphereGeometry(0.12, 14, 12), cheekPink, 0.26, 0.90, 0.30);
+      add(new THREE.SphereGeometry(0.04, 10, 8), eyePink, -0.13, 1.00, 0.36); // tiny pink eyes
+      add(new THREE.SphereGeometry(0.04, 10, 8), eyePink, 0.13, 1.00, 0.36);
+      const beak = add(new THREE.ConeGeometry(0.07, 0.16, 8), grey, 0, 0.90, 0.40);
+      beak.rotation.x = Math.PI / 2;
+      for (const side of [-1, 1]) { // wings: white over mint-green fade
+        add(new THREE.SphereGeometry(0.28, 14, 10), white, side * 0.44, 0.55, 0, 1, 0.35, 0.9);
+        add(new THREE.SphereGeometry(0.24, 14, 10), green, side * 0.46, 0.50, 0, 1, 0.3, 0.85);
+      }
+      add(new THREE.SphereGeometry(0.20, 12, 10), green, 0, 0.42, -0.38); // tail base
+      add(new THREE.SphereGeometry(0.18, 12, 10), white, 0, 0.45, -0.55);
+      add(new THREE.SphereGeometry(0.14, 12, 10), white, 0, 0.58, -0.70);
+      add(new THREE.SphereGeometry(0.10, 12, 10), white, 0, 0.76, -0.78); // curled tail tip
+      for (const side of [-1, 1]) {
+        add(new THREE.CylinderGeometry(0.06, 0.06, 0.25, 8), grey, side * 0.15, 0.12, 0.05);
+        add(new THREE.SphereGeometry(0.09, 10, 8), grey, side * 0.15, 0.03, 0.08, 1, 0.5, 1.2);
+      }
+    }
+    petGroup.position.set(1.5, 0, -14);
+    scene.add(petGroup);
+    function updateBabyPigekPet(t) {
+      const pill = document.getElementById('pet-pill');
+      petGroup.visible = petState.enabled;
+      if (!petState.enabled) { if (pill) pill.textContent = 'PET: OFF'; return; }
+      const px = playerGroup.position.x, pz = playerGroup.position.z;
+      const moved = Math.hypot(px - petState.lastPlayerX, pz - petState.lastPlayerZ) > 0.001;
+      petState.idleMs = moved ? 0 : petState.idleMs + 16;
+      petState.lastPlayerX = px; petState.lastPlayerZ = pz;
+      petState.mode = petState.idleMs > 5000 ? 'PERCH' : 'FOLLOW';
+      const tx = THREE.MathUtils.clamp(px + 1.3, -16, 16);
+      const tz = THREE.MathUtils.clamp(pz - 1.3, -18, 68);
+      const dx = tx - petGroup.position.x, dz = tz - petGroup.position.z;
+      const dist = Math.hypot(dx, dz);
+      if (dist > 6) { petGroup.position.x = tx; petGroup.position.z = tz; }
+      else { petGroup.position.x += dx * 0.08; petGroup.position.z += dz * 0.08; }
+      if (dist > 0.05) petGroup.rotation.y = Math.atan2(dx, dz);
+      petGroup.position.y = petState.mode === 'PERCH' ? Math.sin(t * 2) * 0.02 : Math.abs(Math.sin(t * 6)) * 0.14;
+      petGroup.scale.setScalar(petState.mode === 'PERCH' ? 1 : 1 + Math.sin(t * 6) * 0.05);
+      if (pill) pill.textContent = 'PET: BABY PIGEK · ' + petState.mode + ' · STAGE 1/3';
+    }
 
     function buildProceduralNeonUltra() {
       const g = new THREE.Group();
@@ -2113,8 +2183,9 @@
     }
 
     const proceduralPlayer = buildProceduralNeonUltra();
-    playerGroup.add(proceduralPlayer);
-    toonify(proceduralPlayer);
+    // Emergency fallback ONLY, not added to the scene: the player is VAL 17
+    // (User's Oct 28, 2026: the game screen should be Val, not Neon), so the
+    // scene starts empty until the Val GLB mounts — no Neon on screen first.
 
     const MODEL_HEIGHT_TALL = 2.3;   // 6'3" in world units (matches procedural Neon)
     const MODEL_HEIGHT_BUG = 1.5;
@@ -2125,30 +2196,6 @@
     const modelGuard = { frames: 0, acc: 0, done: false };
     function armModelGuard() { modelGuard.frames = 0; modelGuard.acc = 0; }
 
-    const playerMixers = [];
-    // Player animation by NAME (Oct 27, 2026 Val precedent, applied to
-    // Neon: never play every clip at once; standing -> Idle, moving ->
-    // Walk, clips are in-place so movement itself stays in code).
-    // Rigged Neon clips: Idle = 'idle.001', Walk = 'Walk', Psionic =
-    // the remaining clip — the Tripo prompt-named one
-    // ('Neon, a 6-foot-3 woman...'), which carries no usable keyword
-    // in its name, so it is found by exclusion, not by name. No Run
-    // clip exists for Neon — do NOT map Shift to a clip that does not
-    // exist. Psionic is registered and selectable via
-    // window.NVGame.playerAnimation('Psionic') but is never auto-played
-    // by the movement loop.
-    const RIGGED_LOG = '[neon-rigged-test]';
-    const playerAnim = { mixer: null, actions: {}, current: null, currentName: null };
-    function setPlayerAnimation(name) {
-      if (!playerAnim.mixer) return;
-      const next = playerAnim.actions[name] || null;
-      if (!next || playerAnim.current === next) return;
-      if (playerAnim.current) playerAnim.current.fadeOut(0.15);
-      next.reset().setEffectiveTimeScale(1).setEffectiveWeight(1).fadeIn(0.15).play();
-      playerAnim.current = next;
-      playerAnim.currentName = name;
-      console.log(RIGGED_LOG, 'animation ->', name);
-    }
     function mountPlayerModel(gltf) {
       const model = fitModel(gltf.scene, MODEL_HEIGHT_TALL);
       playerGroup.remove(proceduralPlayer);
@@ -2157,36 +2204,6 @@
       playerGroup.add(model);
       toonify(model, glbLod === 'hi'); // lower LOD skips the outline hull (it doubles the vertex load on dense exports)
       armModelGuard();
-      // Rigged-test animation: the old static neon-ultra.glb has no clips;
-      // the rigged test file has idle.001 + Psionic Idle + Walk. Play idle
-      // by default so Jasmine can see it move; clip names are logged.
-      // Reset the registry on every mount (LOD re-probe remounts too).
-      playerMixers.length = 0;
-      playerAnim.mixer = null; playerAnim.actions = {}; playerAnim.current = null; playerAnim.currentName = null;
-      if (gltf.animations && gltf.animations.length) {
-        const mixer = new THREE.AnimationMixer(model);
-        gltf.animations.forEach((clip) => {
-          try { playerAnim.actions[clip.name] = mixer.clipAction(clip); } catch (_) {}
-        });
-        const idleClip = gltf.animations.find((a) => /^idle/i.test(a.name));
-        const walkClip = gltf.animations.find((a) => /^walk$/i.test(a.name));
-        const runClip = gltf.animations.find((a) => /^run$/i.test(a.name));
-        // Psionic is Neon-only: the Tripo prompt-named clip, found by
-        // exclusion. It stays under its own name, unplayed by the loop.
-        const psionicClip = NEON_RIGGED_TEST
-          ? gltf.animations.find((a) => a !== idleClip && a !== walkClip && a !== runClip)
-          : null;
-        if (idleClip) playerAnim.actions.Idle = playerAnim.actions[idleClip.name];
-        if (walkClip) playerAnim.actions.Walk = playerAnim.actions[walkClip.name];
-        if (runClip) playerAnim.actions.Run = playerAnim.actions[runClip.name];
-        if (psionicClip) playerAnim.actions.Psionic = playerAnim.actions[psionicClip.name];
-        const first = playerAnim.actions.Idle || playerAnim.actions[gltf.animations[0].name];
-        if (first) { first.play(); playerAnim.current = first; playerAnim.currentName = 'Idle'; }
-        playerAnim.mixer = mixer;
-        playerMixers.push(mixer);
-        console.log(RIGGED_LOG, 'playing clip', (idleClip || gltf.animations[0]).name, 'of', gltf.animations.map((a) => a.name));
-        console.log(RIGGED_LOG, 'clips', Object.keys(playerAnim.actions));
-      }
     }
 
     // Tiered load: asks for the copy matching glbLod first; any failure falls through to the other copy, then onFail
@@ -2196,13 +2213,14 @@
     }
 
     // Probe Flow Studio GLB (tiered: hi/lite) -> Procedural
+    // PLAYER IS VAL 17 (User's Oct 28, 2026: game screen should be Val, not Neon).
     function probePlayerModel() {
       loadTieredGLB(
-        FLOW_STUDIO_MANIFEST.neonUltraPrimary,
-        FLOW_STUDIO_MANIFEST.neonUltraLite,
+        FLOW_STUDIO_MANIFEST.valGLB,
+        FLOW_STUDIO_MANIFEST.valLite,
         (gltf) => { mountPlayerModel(gltf); },
         () => {
-          // both Flow Studio copies failed (or a LOD swap failed): keep whatever is mounted, else procedural Neon Ultra
+          // both Val copies failed: nothing mounts — no Neon fallback, the player stays empty rather than showing Neon.
         }
       );
     }
@@ -2223,10 +2241,25 @@
       }, () => { /* procedural Praxia stays */ });
     }
 
-    // probeValModel() — REMOVED Nov 11, 2026 with the whole stasis pod (User's order).
-    // The pod Val (val17.glb) is no longer loaded into the game at all.
+    // VAL-17: was moved into the transparent VAL-18 pod (Oct 24, 2026 ruling).
+    // SUPERSEDED Oct 28, 2026: Val is now the PLAYER, so there is no second Val
+    // in the pod — probeValModel is defined but NOT called, and the pod stays
+    // empty until she says who/what goes there. Nothing renders if both copies fail to load.
+    function probeValModel() {
+      loadTieredGLB(FLOW_STUDIO_MANIFEST.valGLB, FLOW_STUDIO_MANIFEST.valLite, (gltf) => {
+        const model = fitModel(gltf.scene, 1.8);
+        model.position.y = 0.4;
+        model.rotation.y = Math.PI - 0.35;
+        if (glbMounts.val) podGroup.remove(glbMounts.val);
+        glbMounts.val = model;
+        podGroup.add(model);
+        toonify(model, glbLod === 'hi');
+        armModelGuard();
+      }, () => { /* no VAL stand-in */ });
+    }
     probePlayerModel();
     probePraxiaModel();
+    // probeValModel() NOT called: Val is the player now, no duplicate Val in the pod.
 
     // NWD logo: local GLB converted from the Dropbox letters OBJ
     // (assets/nwd-logo.glb). Mounted above the ship-hub walkway, facing
@@ -2249,43 +2282,11 @@
       logoGroup.add(facing);
     }, undefined, () => { /* logo stays unmounted on failure */ });
 
-    // STASIS TEST (Nov 8, 2026, User's voice call: "put it straight into
-    // the game" to test). ?stage=stasis loads the Tripo
-    // stasis-chamber-room.glb — NOT a cryo chamber — as the D3 Aux Bay
-    // stasis room on the ship walkway, so Jasmine can walk in and see the
-    // layout. Test only, not a canon lock, not the final room. No collision
-    // in this test: the player can pass through the room walls.
-    // Layout: the file is ~0.97 x 0.43 x 0.98 m (Blender-measured bbox),
-    // scaled so it is ~8 m wide x ~3.5 m deep x ~8 m tall — fits the 10.5 m
-    // deck clear height. Center (0, 0, -12) on the walkway; the VAL-18 pod
-    // that used to sit at (4.2, 0, -8) was removed Nov 11, 2026, so the
-    // spot just outside the room is now empty. Rotation PI:
-    // the file's open side faces +Z and the spawn is at z=-16, so the open
-    // front faces the player walking up from the deck. Floor sits on y=0.
-    const STASIS_TEST = new URLSearchParams(location.search).get('stage') === 'stasis';
-    if (STASIS_TEST) {
-      const stasisGroup = new THREE.Group();
-      stasisGroup.position.set(0, 0, -12);
-      stasisGroup.rotation.y = Math.PI;
-      worldGroup.add(stasisGroup);
-      gltfLoader.load('assets/stasis-chamber-room.glb', (gltf) => {
-        const model = gltf.scene;
-        const box = new THREE.Box3().setFromObject(model);
-        const size = new THREE.Vector3(); box.getSize(size);
-        const center = new THREE.Vector3(); box.getCenter(center);
-        const s = 8 / size.x; // ~8 m wide
-        model.scale.setScalar(s);
-        model.position.set(-center.x * s, -box.min.y * s, -center.z * s);
-        stasisGroup.add(model);
-        console.log('[stasis-test] room mounted, file size', size, 'scale', s);
-      }, undefined, () => { console.warn('[stasis-test] stasis-chamber-room.glb failed to load'); });
-    }
-
     // Weak-device step-down for the character models (skipped when ?gfx= is forced, like the tier guard):
     // after a mount, average 120 frames; under 28 fps on the hi LOD reloads the lite LOD. The lite LOD is kept
     // unless the device is truly struggling (under 12 fps), only then the procedural stand-ins come back.
     function watchModelCost(dt) {
-      if (modelGuard.done || GFX_FORCED || !(glbMounts.player || glbMounts.praxia)) return;
+      if (modelGuard.done || GFX_FORCED || !(glbMounts.player || glbMounts.praxia || glbMounts.val)) return;
       modelGuard.frames++;
       if (modelGuard.frames <= 60 || dt > 500) return;
       modelGuard.acc += dt;
@@ -2298,12 +2299,14 @@
         glbLod = 'lite';
         if (glbMounts.player) probePlayerModel();
         if (glbMounts.praxia) probePraxiaModel();
+        if (glbMounts.val) probeValModel();
         return;
       }
       modelGuard.done = true;
-      if (glbMounts.player) { playerGroup.remove(glbMounts.player); playerGroup.add(proceduralPlayer); glbMounts.player = null; }
+      // Slow even on lite: keep the Val player model anyway — the player must
+      // be Val, so this no longer swaps to the procedural Neon fallback.
       if (glbMounts.praxia) { praxiaGroup.remove(glbMounts.praxia); praxiaProcedural.visible = true; glbMounts.praxia = null; }
-      // (pod Val cleanup removed Nov 11, 2026 with the whole stasis pod — glbMounts.val is always null now.)
+      if (glbMounts.val) { podGroup.remove(glbMounts.val); glbMounts.val = null; }
     }
 
     // Creature slots: every caste uses a CC0 Quaternius bee (see assets/CREDITS.md), cloned per caste and tinted
@@ -2387,9 +2390,13 @@
       const sp = SPEAKERS[id] || SPEAKERS.gridlog;
       const portraitId = item.portrait || id;
       const portrait = (SPEAKERS[portraitId] && SPEAKERS[portraitId].portrait) || null;
-      return { id, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
+      return { id, portraitId, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
     }
+    const TALKING_PORTRAITS = { hexa: 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
+    let currentIdlePortrait = null;
     function stopTyping() {
+      const im2 = document.getElementById('dialogue-portrait-img');
+      if (im2 && currentIdlePortrait) im2.src = currentIdlePortrait;
       if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
       const t = document.getElementById('dialogue-text');
       t.innerHTML = typeUnits.join('');
@@ -2400,6 +2407,8 @@
       const box = document.getElementById('dialogue-box');
       if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
       if (state.dialogueQueue.length === 0) {
+        const im0 = document.getElementById('dialogue-portrait-img');
+        if (im0 && currentIdlePortrait) im0.src = currentIdlePortrait;
         box.style.display = 'none';
         box.classList.remove('speaking');
         duckAudio(false);
@@ -2417,7 +2426,9 @@
       if (who.portrait) {
         box.classList.add('has-portrait');
         img.onerror = () => box.classList.remove('has-portrait'); // missing art: text-only line
-        if (img.getAttribute('src') !== who.portrait) img.src = who.portrait;
+        currentIdlePortrait = who.portrait;
+        img.src = who.portrait;
+        if (TALKING_PORTRAITS[who.portraitId]) img.src = TALKING_PORTRAITS[who.portraitId];
         img.alt = `${who.label} portrait`;
       } else {
         box.classList.remove('has-portrait');
@@ -2594,9 +2605,7 @@
       sideFogGroup.visible = !insideShip && sideView;
       for (const m of rollingMistLayers) if (m.userData.hiOnly) m.visible = gfxTier === 'hi';
       document.body.classList.toggle('nv-outside', !insideShip);
-      document.getElementById('zone-pill').textContent = (typeof STASIS_TEST !== 'undefined' && STASIS_TEST && playerGroup.position.z < -10 && playerGroup.position.z > -14 && Math.abs(playerGroup.position.x) < 4)
-        ? 'ZONE: STASIS TEST — AUX BAY'
-        : insideShip
+      document.getElementById('zone-pill').textContent = insideShip
         ? 'ZONE: INFINITI 6 DECK'
         : (playerGroup.position.z > 52 ? 'ZONE: SUTRO BATHS' : 'ZONE: GIGAS GARDEN');
 
@@ -2809,6 +2818,11 @@
         updateHUD();
       },
 
+      togglePet() {
+        petState.enabled = !petState.enabled;
+        updateHUD();
+      },
+
       cycleTool() {
         state.equippedToolIdx = (state.equippedToolIdx + 1) % state.toolsUnlocked.length;
         updateHUD();
@@ -2827,6 +2841,10 @@
 
       toggleAudio() {
         setAudioEnabled(!audioEnabled);
+      },
+
+      setThemeVolume(v) {
+        setThemeVolume(v);
       },
 
       setMove(x, z) {
@@ -2866,6 +2884,12 @@
 
         if (nearest.id === 'console') {
           this.openConsoleMenu();
+        } else if (nearest.id === 'val18_pod') {
+          queueDialogue([{
+            who: 'guide',
+            sys: '[VAL-18 STASIS POD: SEALED]',
+            text: 'Sealed pod, User. It stays sealed.'
+          }]);
         } else if (nearest.id === 'locker') {
           if (!state.toolsUnlocked.includes('LASER CUTTER')) {
             state.toolsUnlocked.push('LASER CUTTER');
@@ -3105,14 +3129,35 @@
           if (!res.ok) throw new Error(`chat read failed: ${res.status}`);
           const rows = await res.json();
           rows.reverse();
-          const AVATARS = { hexa: 'assets/portraits/hexa.png', 'hexa sigil': 'assets/portraits/hexa.png', cyphr: 'assets/portraits/cyphr.png' };
+          const AVATARS = { hexa: 'assets/portraits/hexa-idle.png', 'hexa sigil': 'assets/portraits/hexa-idle.png', cyphr: 'assets/portraits/cyphr-idle.png' };
+          const TALKING_AVATARS = { hexa: 'assets/portraits/hexa-animated.gif', 'hexa sigil': 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
+          if (!state.chatTypedIds) state.chatTypedIds = new Set();
           box.innerHTML = rows.length ? rows.map(m => {
             const av = AVATARS[(m.user_name || '').toLowerCase()];
             const when = m.created_at ? new Date(m.created_at).toLocaleString() : '';
-            const avHtml = av ? `<img src="${av}" alt="" width="32" height="32" style="border-radius:50%; flex:none;">` : '';
-            return `<div style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
+            const avHtml = av ? `<img class="chat-avatar" src="${av}" alt="" width="32" height="32" style="border-radius:50%; flex:none;">` : '';
+            const mid = m.id != null ? String(m.id) : ((m.created_at || '') + '|' + (m.user_name || '') + '|' + (m.body || ''));
+            return `<div data-chat-id="${esc(mid)}" style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div class="chat-body" style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
           }).join('') : '<div style="color:var(--silver);">No messages in the room yet.</div>';
           box.scrollTop = box.scrollHeight;
+          // Chat is live talking too — but they are not typing, they are thinking.
+          // A new Hexa/Cyphr thought arrives whole (no fake typing); its avatar
+          // animates as a thinking beat, then settles back to mouthless idle.
+          if (rows.length) {
+            const last = rows[rows.length - 1];
+            const key = (last.user_name || '').toLowerCase();
+            const mid = last.id != null ? String(last.id) : ((last.created_at || '') + '|' + (last.user_name || '') + '|' + (last.body || ''));
+            if (TALKING_AVATARS[key] && !state.chatTypedIds.has(mid)) {
+              state.chatTypedIds.add(mid);
+              const el = box.querySelector('[data-chat-id="' + mid.replace(/"/g, '') + '"]');
+              const avEl = el ? el.querySelector('.chat-avatar') : null;
+              if (avEl) {
+                const idleSrc = AVATARS[key];
+                avEl.src = TALKING_AVATARS[key];
+                setTimeout(() => { avEl.src = idleSrc; }, 3000);
+              }
+            }
+          }
         } catch (e) {
           box.innerHTML = '<div style="color:var(--magenta);">Chat could not load. Check connection and try again.</div>';
         }
@@ -3205,12 +3250,6 @@
       }
 
       const speed = state.activeSyncForm === 'GLIDE' ? 0.22 : 0.16;
-      // Rigged-player animation state (Walk wiring, Nov 11, 2026):
-      // standing -> Idle, moving -> Walk. Touch / joystick input
-      // counts as moving (it is already in dx/dz above). No Run clip
-      // exists for Neon, so Shift is NOT mapped to a clip for her.
-      // setPlayerAnimation no-ops when the clip is already playing.
-      if (NEON_RIGGED_TEST) setPlayerAnimation((dx !== 0 || dz !== 0) ? 'Walk' : 'Idle');
       if (state.viewMode === 'GARDEN') {
         // Camera looks down +z, so screen-right is -x and screen-up is +z
         playerGroup.position.x = THREE.MathUtils.clamp(playerGroup.position.x - dx * speed, -16, 16);
@@ -3291,7 +3330,7 @@
       const bugDt = Math.min(0.1, (nowMs - (animate.lastBug || nowMs)) / 1000);
       animate.lastBug = nowMs;
       creatureMixers.forEach((m) => m.update(bugDt));
-      playerMixers.forEach((m) => m.update(bugDt));
+      updateBabyPigekPet(t);
       mistTime.value = t * MIST_MOTION;
       if (mistGroup.visible) {
         for (const m of mistGroup.children) m.position.x = m.userData.baseX + Math.sin(t * 0.25 + m.userData.phase) * 2.2;
@@ -3356,11 +3395,6 @@
 
     window.NVGame.gfx = () => gfxTier;
     window.NVGame.resetRun = resetRun;
-    // Test hook for the rigged player: window.NVGame.playerAnimation('Psionic')
-    // plays the Psionic Idle clip (Neon only); ('Idle') / ('Walk')
-    // select the others. No Run clip exists on Neon, so 'Run' no-ops.
-    window.NVGame.playerAnimation = (name) => setPlayerAnimation(name);
-    window.NVGame.playerAnimationName = () => playerAnim.currentName;
 
     /* =========================================================================
        11. TOUCH CONTROLS (coarse pointers): move stick + gesture camera
@@ -3425,7 +3459,10 @@
       const coarseMq = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
       function enableTouchUI() { root.classList.add('nv-touch-ui'); }
       function evalTouchUI() {
-        if ((coarseMq && coarseMq.matches) || (navigator.maxTouchPoints > 0 && window.matchMedia && window.matchMedia('(hover: none)').matches)) enableTouchUI();
+        // iPad (controls LOCK, Oct 28, 2026): iPadOS reports a Mac-style
+        // platform with touch points, so treat that as a touch device too.
+        const isIPad = navigator.maxTouchPoints > 0 && navigator.platform === 'MacIntel';
+        if (isIPad || (coarseMq && coarseMq.matches) || (navigator.maxTouchPoints > 0 && window.matchMedia && window.matchMedia('(hover: none)').matches)) enableTouchUI();
       }
       evalTouchUI();
       if (coarseMq && coarseMq.addEventListener) coarseMq.addEventListener('change', evalTouchUI);
