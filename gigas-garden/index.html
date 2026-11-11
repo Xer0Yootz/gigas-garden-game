@@ -411,12 +411,25 @@
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0 1px, rgba(0,0,0,0) 1px 3px);
     }
-    /* While a line types out: subtle bob for most speakers, glow pulse for the holograms (Hexa, Cyphr). No mouth flaps. */
-    #dialogue-box.speaking.anim-bob #dialogue-portrait img { animation: nv-speak-bob 0.42s ease-in-out infinite alternate; }
+    /* Portrait stays still while a line types out (User's word, Nov 11, 2026) — no bob, no drift. The holograms (Hexa, Cyphr) speak with a live waveform that grows and shrinks; the glow pulse stays (box-shadow only, no movement). */
+    #dialogue-box.speaking.anim-bob #dialogue-portrait img { animation: none; }
     #dialogue-box.speaking.anim-glow #dialogue-portrait { animation: nv-speak-glow 0.9s ease-in-out infinite alternate; }
-    #dialogue-box.speaking.anim-glow #dialogue-portrait img { animation: nv-speak-drift 1.8s ease-in-out infinite alternate; }
-    @keyframes nv-speak-bob { from { transform: translateY(0) scale(1.02); } to { transform: translateY(-2px) scale(1.02); } }
-    @keyframes nv-speak-drift { from { transform: scale(1.02); filter: brightness(1); } to { transform: scale(1.035); filter: brightness(1.18); } }
+    #dialogue-box.speaking.anim-glow #dialogue-portrait img { animation: none; }
+    @keyframes nv-speak-glow {
+      from { box-shadow: 2px 2px 0 var(--magenta), 0 0 0 rgba(0,240,255,0); }
+      to   { box-shadow: 2px 2px 0 var(--magenta), 0 0 14px var(--speaker-accent, var(--cyan)); }
+    }
+    /* Live waveform for Hexa + Cyphr while speaking: bars grow and shrink like real sound. Hidden when idle. */
+    #dialogue-portrait { position: relative; }
+    #dialogue-portrait .nv-wave { display: none; position: absolute; left: 50%; bottom: 16%; transform: translateX(-50%); align-items: flex-end; gap: 2px; height: 16px; pointer-events: none; }
+    #dialogue-box.speaking.has-wave #dialogue-portrait .nv-wave { display: flex; }
+    #dialogue-portrait .nv-wave i { display: block; width: 3px; border-radius: 2px; background: var(--speaker-accent, #00f0ff); box-shadow: 0 0 6px var(--speaker-accent, #00f0ff); transform-origin: bottom; animation: nv-wave-grow 0.45s ease-in-out infinite alternate; }
+    #dialogue-portrait .nv-wave i:nth-child(1) { height: 35%; animation-delay: 0s; }
+    #dialogue-portrait .nv-wave i:nth-child(2) { height: 70%; animation-delay: 0.08s; }
+    #dialogue-portrait .nv-wave i:nth-child(3) { height: 100%; animation-delay: 0.16s; }
+    #dialogue-portrait .nv-wave i:nth-child(4) { height: 65%; animation-delay: 0.24s; }
+    #dialogue-portrait .nv-wave i:nth-child(5) { height: 40%; animation-delay: 0.32s; }
+    @keyframes nv-wave-grow { from { transform: scaleY(0.35); } to { transform: scaleY(1); } }
     @keyframes nv-speak-glow {
       from { box-shadow: 2px 2px 0 var(--magenta), 0 0 0 rgba(0,240,255,0); }
       to   { box-shadow: 2px 2px 0 var(--magenta), 0 0 14px var(--speaker-accent, var(--cyan)); }
@@ -681,7 +694,7 @@
 
       <!-- Dialogue Overlay -->
       <aside id="dialogue-box" aria-live="polite">
-        <figure id="dialogue-portrait" style="margin:0;"><img id="dialogue-portrait-img" alt="" width="84" height="84" decoding="async"></figure>
+        <figure id="dialogue-portrait" style="margin:0;"><img id="dialogue-portrait-img" alt="" width="84" height="84" decoding="async"><span class="nv-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></figure>
         <div id="dialogue-body">
           <div id="dialogue-speaker">HEXA SIGIL</div>
           <div id="dialogue-sys"></div>
@@ -2392,7 +2405,7 @@
       const portrait = (SPEAKERS[portraitId] && SPEAKERS[portraitId].portrait) || null;
       return { id, portraitId, sp, label: item.label || sp.name, portrait, anim: (SPEAKERS[portraitId] || sp).anim };
     }
-    const TALKING_PORTRAITS = { hexa: 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
+    const WAVE_SPEAKERS = new Set(['hexa', 'cyphr']); // holograms whose portrait gets the live grow/shrink waveform while speaking
     let currentIdlePortrait = null;
     function stopTyping() {
       const im2 = document.getElementById('dialogue-portrait-img');
@@ -2422,13 +2435,13 @@
       box.dataset.speaker = who.id;
       box.classList.remove('anim-bob', 'anim-glow');
       if (who.anim === 'bob' || who.anim === 'glow') box.classList.add('anim-' + who.anim);
+      box.classList.toggle('has-wave', WAVE_SPEAKERS.has(who.portraitId));
       const img = document.getElementById('dialogue-portrait-img');
       if (who.portrait) {
         box.classList.add('has-portrait');
         img.onerror = () => box.classList.remove('has-portrait'); // missing art: text-only line
         currentIdlePortrait = who.portrait;
         img.src = who.portrait;
-        if (TALKING_PORTRAITS[who.portraitId]) img.src = TALKING_PORTRAITS[who.portraitId];
         img.alt = `${who.label} portrait`;
       } else {
         box.classList.remove('has-portrait');
@@ -3130,8 +3143,6 @@
           const rows = await res.json();
           rows.reverse();
           const AVATARS = { hexa: 'assets/portraits/hexa-idle.png', 'hexa sigil': 'assets/portraits/hexa-idle.png', cyphr: 'assets/portraits/cyphr-idle.png' };
-          const TALKING_AVATARS = { hexa: 'assets/portraits/hexa-animated.gif', 'hexa sigil': 'assets/portraits/hexa-animated.gif', cyphr: 'assets/portraits/cyphr-animated.gif' };
-          if (!state.chatTypedIds) state.chatTypedIds = new Set();
           box.innerHTML = rows.length ? rows.map(m => {
             const av = AVATARS[(m.user_name || '').toLowerCase()];
             const when = m.created_at ? new Date(m.created_at).toLocaleString() : '';
@@ -3140,24 +3151,6 @@
             return `<div data-chat-id="${esc(mid)}" style="display:flex; gap:8px; border:1px solid var(--cyan); padding:8px; background:#0b0414;">${avHtml}<div><div style="color:var(--magenta); font-weight:bold;">${esc(m.user_name)} <span style="color:var(--silver); font-weight:normal;">${esc(when)}</span></div><div class="chat-body" style="color:#fff; margin-top:3px; overflow-wrap:anywhere;">${esc(m.body)}</div></div></div>`;
           }).join('') : '<div style="color:var(--silver);">No messages in the room yet.</div>';
           box.scrollTop = box.scrollHeight;
-          // Chat is live talking too — but they are not typing, they are thinking.
-          // A new Hexa/Cyphr thought arrives whole (no fake typing); its avatar
-          // animates as a thinking beat, then settles back to mouthless idle.
-          if (rows.length) {
-            const last = rows[rows.length - 1];
-            const key = (last.user_name || '').toLowerCase();
-            const mid = last.id != null ? String(last.id) : ((last.created_at || '') + '|' + (last.user_name || '') + '|' + (last.body || ''));
-            if (TALKING_AVATARS[key] && !state.chatTypedIds.has(mid)) {
-              state.chatTypedIds.add(mid);
-              const el = box.querySelector('[data-chat-id="' + mid.replace(/"/g, '') + '"]');
-              const avEl = el ? el.querySelector('.chat-avatar') : null;
-              if (avEl) {
-                const idleSrc = AVATARS[key];
-                avEl.src = TALKING_AVATARS[key];
-                setTimeout(() => { avEl.src = idleSrc; }, 3000);
-              }
-            }
-          }
         } catch (e) {
           box.innerHTML = '<div style="color:var(--magenta);">Chat could not load. Check connection and try again.</div>';
         }
