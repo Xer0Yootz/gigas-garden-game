@@ -1,0 +1,307 @@
+// ===========================================================================
+// NEON VIGIL — NV SKYSPHERE (reusable module)
+// Level 2 Gigas Garden sky: gradient dome + moving striped pink sun +
+// drifting cloud layer. Plain JS, no new dependencies (takes THREE).
+//
+// Canon locks (Nov 10, 2026, Jasmine's word):
+// - Sky gradient is PINK TO PURPLE across the sky. Cyan is for the WATER
+//   ONLY — cyan sits at the base of the gradient for the water, nowhere
+//   else in the sky. This module contains NO cyan anywhere: gradient,
+//   sun, and clouds are pink / purple / white only.
+//   Nov 10 update (Jasmine's word): zenith deepened to a darker purple
+//   (#160a3a) and blue brought up in the upper gradient (mid #a04a8a) —
+//   indigo/violet blue, NOT cyan. Horizon pink #ff6b9d unchanged.
+// - The sun MOVES: it rises and sets across the sky, driving the light
+//   from dawn through dusk. Behaviour follows the NVSun.js contract
+//   (Oct 27, 2026, ChatGPT HEX OS): the striped sun is MOVED only —
+//   appearance not redesigned — and one directional light + hemisphere
+//   levels are driven by the sun's elevation. The full real-date/GPS
+//   solar-position + moon/eclipse wiring (NVSun/NVMoon/NVSkyEvents) is
+//   a follow-up: that code text lives in the ChatGPT chat, not in this
+//   repo, and the moon's appearance is still open for her ruling — so
+//   this module moves the sun on a game-time arc and drives the light,
+//   and adds NO moon.
+// - The sun itself is the striped pink vaporwave disc (kept Nov 1,
+//   2026): large pale-pink disc with horizontal stripes. Its IDENTITY
+//   is still open (presumed "big weird pink thing") — this module does
+//   not rename or re-identify it, and adds no lore text about it.
+// - Size: the dome radius is TEN TIMES the world extent, from ONE named
+//   constant. World extent here = the Level 2 Garden, far ruins ~2 mi
+//   out (WORLD_RADIUS = 2 mi in metres). Change WORLD_RADIUS and the
+//   whole sky (dome, sun distance/size, clouds, camera far) rescales.
+// ===========================================================================
+
+export const WORLD_RADIUS = 3218.688; // metres — ~2 mi, the far-ruins extent
+export const SKY_RADIUS = WORLD_RADIUS * 10; // 32,186.88 m — dome radius, 10x world
+export const CAMERA_FAR = SKY_RADIUS * 2; // camera far plane must exceed the dome
+
+const SUN_DISTANCE = 700; // metres — just beyond the far-ruin plates (380 m).
+// The DOME is 10x the world; the SUN is placed for the composition, not
+// on the dome: at ~700 m its parallax matches the plates, so the disc
+// sits low in the gap between them from the orbit AND ground cameras,
+// the way the old shell's sun did. (At dome distance the sun would sit
+// at true north and fall out of the orbit camera's frame.)
+// Sun angular size is preserved from the old shell: disc radius 70 m at
+// ~706 m distance -> atan(70/706) ~= 0.1 rad (~5.7 deg radius).
+const SUN_ANGULAR_RADIUS = 0.1;
+const SUN_RADIUS = SUN_DISTANCE * Math.tan(SUN_ANGULAR_RADIUS);
+const SUN_GLOW_RADIUS = SUN_RADIUS * (120 / 70); // old glow/disc ratio kept
+
+const CLOUD_RADIUS = SKY_RADIUS * 0.94; // clouds sit inside the dome, inside the sun
+const DAY_LENGTH_S = 600; // one full dawn -> dusk sweep = 10 minutes
+const MIN_ELEV_DEG = 2; // sun skims the horizon at rise/set
+const MAX_ELEV_DEG = 8; // sun at midday: low in the north, in the plates' gap
+// (kept low so the disc stays in frame from the orbit and ground cameras,
+// the way the old shell's low sun did — the plates span ~0-28 deg up)
+
+// Gradient stops — pink to purple only, no cyan anywhere in the sky.
+// Nov 10, 2026 (Jasmine's word): zenith deepened to a darker purple and
+// blue brought up in the upper gradient (indigo/violet blue — NOT cyan;
+// cyan stays water-only). Horizon pink unchanged.
+const C_HORIZON = 0xff6b9d;
+const C_MID = 0xa04a8a;
+const C_ZENITH = 0x160a3a;
+
+// Sun texture — copied verbatim from the old shell so the striped disc
+// look is unchanged: pale pink disc, darker pink horizontal stripes.
+function makeSunTexture(THREE) {
+  const cv = document.createElement('canvas');
+  cv.width = 512;
+  cv.height = 512;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, 512, 512);
+  ctx.fillStyle = '#ffd7e8';
+  ctx.beginPath();
+  ctx.arc(256, 256, 250, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ff5e8a';
+  const stripeYs = [90, 140, 190, 240, 290, 340, 390];
+  for (const y of stripeYs) {
+    const halfW = Math.sqrt(Math.max(0, 250 * 250 - (y - 256) * (y - 256)));
+    ctx.fillRect(256 - halfW, y - 9, halfW * 2, 18);
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+// Cloud texture — soft neon-tinged puffs, PINK / PURPLE / WHITE only.
+// No cyan: cyan is water-only in this sky.
+function makeCloudTexture(THREE) {
+  const W = 2048;
+  const H = 1024;
+  const cv = document.createElement('canvas');
+  cv.width = W;
+  cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  const tints = ['#ffd7e8', '#ff9ec4', '#e8a0c8', '#ffffff', '#c98aa8'];
+  // Deterministic pseudo-random blobs so the layer is stable run to run.
+  let seed = 5150;
+  const rnd = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  for (let i = 0; i < 90; i++) {
+    const x = rnd() * W;
+    const y = 170 + rnd() * 460; // mid-sky band (v ~ 0.45-0.85 on the sphere)
+    const r = 40 + rnd() * 150;
+    const tint = tints[Math.floor(rnd() * tints.length)];
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, tint + 'cc');
+    g.addColorStop(0.55, tint + '55');
+    g.addColorStop(1, tint + '00');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(x, y, r * (1.6 + rnd()), r * (0.35 + rnd() * 0.25), 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  return tex;
+}
+
+function gradientShaderMaterial(THREE) {
+  return new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    depthWrite: false,
+    fog: false,
+    uniforms: {
+      cHorizon: { value: new THREE.Color(C_HORIZON) },
+      cMid: { value: new THREE.Color(C_MID) },
+      cZenith: { value: new THREE.Color(C_ZENITH) },
+    },
+    vertexShader: /* glsl */ `
+      varying vec3 vDir;
+      void main() {
+        vDir = normalize(position);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      varying vec3 vDir;
+      uniform vec3 cHorizon;
+      uniform vec3 cMid;
+      uniform vec3 cZenith;
+      void main() {
+        float h = clamp(vDir.y, -0.05, 1.0);
+        vec3 c;
+        if (h < 0.25) c = mix(cHorizon, cMid, h / 0.25);
+        else c = mix(cMid, cZenith, (h - 0.25) / 0.75);
+        gl_FragColor = vec4(c, 1.0);
+      }
+    `,
+  });
+}
+
+// Sun direction for a time of day t in [0, 1]: 0 = dawn (east), 0.5 =
+// midday (north, low, between the far-ruin plates), 1 = dusk (west).
+// Elevation rises from MIN to MAX and back, so the sun climbs out of the
+// horizon, crosses the north low, and sinks again.
+const DEG = Math.PI / 180;
+function sunDirection(t, out) {
+  const az = Math.PI * t; // 0 -> +X (east), PI/2 -> -Z (north), PI -> -X (west)
+  const el =
+    MIN_ELEV_DEG * DEG +
+    (MAX_ELEV_DEG - MIN_ELEV_DEG) * DEG * Math.sin(Math.PI * t);
+  out.set(
+    Math.cos(az) * Math.cos(el),
+    Math.sin(el),
+    -Math.sin(az) * Math.cos(el),
+  );
+  return out;
+}
+
+export function createSkysphere(THREE, options = {}) {
+  const {
+    timeOfDay = 0.5, // default: midday — sun low in the north, in the gap
+    timeScale = 1, // 1 = real time; 0 = frozen sun
+    dayLengthS = DAY_LENGTH_S,
+    sunLight = null, // THREE.DirectionalLight — driven by the sun (optional)
+    hemiLight = null, // THREE.HemisphereLight — driven by the sun (optional)
+  } = options;
+
+  const group = new THREE.Group();
+  group.name = 'nvSkysphere';
+
+  // --- Gradient dome: inverted sphere, pink horizon -> deep purple zenith.
+  const dome = new THREE.Mesh(
+    new THREE.SphereGeometry(SKY_RADIUS, 48, 24),
+    gradientShaderMaterial(THREE),
+  );
+  dome.name = 'skyDome';
+  dome.renderOrder = -10;
+  group.add(dome);
+
+  // --- Striped pink sun disc + glow. One named group, swaps out cleanly
+  // if she means something else by the "big weird pink thing".
+  const sunGroup = new THREE.Group();
+  sunGroup.name = 'pinkSun';
+  const sunGlow = new THREE.Mesh(
+    new THREE.CircleGeometry(SUN_GLOW_RADIUS, 48),
+    new THREE.MeshBasicMaterial({
+      color: 0xff8fb8,
+      transparent: true,
+      opacity: 0.22,
+      fog: false,
+      depthWrite: false,
+    }),
+  );
+  sunGroup.add(sunGlow);
+  const sunDisc = new THREE.Mesh(
+    new THREE.CircleGeometry(SUN_RADIUS, 64),
+    new THREE.MeshBasicMaterial({
+      map: makeSunTexture(THREE),
+      transparent: true,
+      fog: false,
+    }),
+  );
+  sunGroup.add(sunDisc);
+  group.add(sunGroup);
+
+  // --- Drifting cloud layer: soft pink/purple/white puffs on a sphere
+  // just inside the dome. No cyan.
+  const clouds = new THREE.Mesh(
+    new THREE.SphereGeometry(CLOUD_RADIUS, 48, 24),
+    new THREE.MeshBasicMaterial({
+      map: makeCloudTexture(THREE),
+      transparent: true,
+      side: THREE.BackSide,
+      depthWrite: false,
+      fog: false,
+      opacity: 0.5,
+    }),
+  );
+  clouds.name = 'cloudLayer';
+  clouds.renderOrder = -9;
+  group.add(clouds);
+
+  // --- Light driving (NVSun.js contract): key light follows the sun's
+  // direction; its colour and strength, and the hemisphere level, follow
+  // the sun's elevation — pale and strong at midday, deep pink and low
+  // at dawn/dusk.
+  const cDawn = new THREE.Color(0xff7fa8);
+  const cNoon = new THREE.Color(0xffc9da);
+  const tmpColor = new THREE.Color();
+  const dir = new THREE.Vector3();
+
+  let t = THREE.MathUtils.clamp(timeOfDay, 0, 1);
+
+  function applySun() {
+    sunDirection(t, dir);
+    sunGroup.position.copy(dir).multiplyScalar(SUN_DISTANCE);
+    sunGroup.lookAt(0, 0, 0); // disc faces the world, from wherever it is
+    const dayF = Math.sin(Math.PI * t); // 0 at rise/set, 1 at midday
+    if (sunLight) {
+      sunLight.position.copy(dir).multiplyScalar(1000);
+      sunLight.color.copy(tmpColor.copy(cDawn).lerp(cNoon, dayF));
+      sunLight.intensity = 1.0 + 0.8 * dayF;
+    }
+    if (hemiLight) {
+      hemiLight.intensity = 0.65 + 0.35 * dayF;
+    }
+  }
+  applySun();
+
+  function setTimeOfDay(v) {
+    t = THREE.MathUtils.clamp(v, 0, 1);
+    applySun();
+  }
+
+  function sunPosition(out = new THREE.Vector3()) {
+    return out.copy(sunGroup.position);
+  }
+
+  let meshCount = 0;
+  group.traverse((o) => {
+    if (o.isMesh) meshCount++;
+  });
+
+  return {
+    group,
+    dome,
+    sunGroup,
+    sunDisc,
+    sunGlow,
+    clouds,
+    meshCount,
+    WORLD_RADIUS,
+    SKY_RADIUS,
+    CAMERA_FAR,
+    SUN_RADIUS,
+    SUN_DISTANCE,
+    dayLengthS,
+    getTimeOfDay: () => t,
+    setTimeOfDay,
+    sunPosition,
+    // Advance the day and drift the clouds. dt in seconds.
+    update(dt) {
+      if (timeScale !== 0) {
+        t = (t + (dt * timeScale) / dayLengthS) % 1;
+        applySun();
+      }
+      clouds.rotation.y += dt * 0.004; // slow drift (~26 min per turn)
+    },
+  };
+}
