@@ -863,6 +863,26 @@
       }
     };
 
+    // NEON RIGGED TEST (Nov 8, 2026, User's voice call: rigged Neon with
+    // hair + outfit already on it goes into the game AS IS as the user's
+    // avatar just to test for now). ?stage=neon-rigged swaps the player
+    // slot to assets/neon-ultra-rigged-test-walk.glb (Tripo Neon Ultra
+    // Version One, rigged Nov 8: 1 skin, 65 joints, 3 animations —
+    // idle.001 15.33s + Psionic Idle 4.96s + Walk 1.03s, in-place, added
+    // Nov 11, 2026 by free Mixamo retarget — zero Tripo credits).
+    // The 2-clip file assets/neon-ultra-rigged-test.glb is kept on disk
+    // as fallback. Default game is unchanged: without the flag, the old
+    // static neon-ultra.glb still loads. Test only, not a canon lock,
+    // not the final rig (Tripo AutoRig is posing-only per Jasmine's
+    // rule). Hair-removal into the bald base is a LATER step — NOT
+    // done here.
+    const NEON_RIGGED_TEST = new URLSearchParams(location.search).get('stage') === 'neon-rigged';
+    if (NEON_RIGGED_TEST) {
+      FLOW_STUDIO_MANIFEST.neonUltraPrimary = 'assets/neon-ultra-rigged-test-walk.glb';
+      FLOW_STUDIO_MANIFEST.neonUltraLite = 'assets/neon-ultra-rigged-test-walk.glb';
+      console.log('[neon-rigged-test] player slot = rigged Neon test avatar');
+    }
+
     // Shared Drive plates, web-optimized copies stored flat in the assets folder (external files, never inlined)
     const DRIVE_BACKDROP_MANIFEST = {
       bridgeInterior: 'assets/Ships_Bridge_Viewport_01.jpg',
@@ -2128,6 +2148,28 @@
     const modelGuard = { frames: 0, acc: 0, done: false };
     function armModelGuard() { modelGuard.frames = 0; modelGuard.acc = 0; }
 
+    const playerMixers = [];
+    // Player animation by NAME (Val precedent, Oct 27, 2026: never play
+    // every clip at once; standing -> Idle, moving -> Walk, clips are
+    // in-place so movement itself stays in code). Rigged Neon clips:
+    // Idle = 'idle.001', Walk = 'Walk', Psionic = the remaining clip —
+    // the Tripo prompt-named one ('Neon, a 6-foot-3 woman...'), which
+    // carries no usable keyword in its name, so it is found by
+    // exclusion, not by name. No Run clip exists for Neon — do NOT map
+    // Shift to a clip that does not exist. Psionic is registered and
+    // selectable via window.NVGame.playerAnimation('Psionic') but is
+    // never auto-played by the movement loop.
+    const playerAnim = { mixer: null, actions: {}, current: null, currentName: null };
+    function setPlayerAnimation(name) {
+      if (!playerAnim.mixer) return;
+      const next = playerAnim.actions[name] || null;
+      if (!next || playerAnim.current === next) return;
+      if (playerAnim.current) playerAnim.current.fadeOut(0.15);
+      next.reset().setEffectiveTimeScale(1).setEffectiveWeight(1).fadeIn(0.15).play();
+      playerAnim.current = next;
+      playerAnim.currentName = name;
+      console.log('[neon-rigged-test] animation ->', name);
+    }
     function mountPlayerModel(gltf) {
       const model = fitModel(gltf.scene, MODEL_HEIGHT_TALL);
       playerGroup.remove(proceduralPlayer);
@@ -2136,6 +2178,30 @@
       playerGroup.add(model);
       toonify(model, glbLod === 'hi'); // lower LOD skips the outline hull (it doubles the vertex load on dense exports)
       armModelGuard();
+      // Rigged-test animation: the old static neon-ultra.glb has no clips;
+      // the rigged test file has idle.001 + Psionic Idle + Walk. Play idle
+      // by default so Jasmine can see it move; clip names are logged.
+      // Reset the registry on every mount (LOD re-probe remounts too).
+      playerMixers.length = 0;
+      playerAnim.mixer = null; playerAnim.actions = {}; playerAnim.current = null; playerAnim.currentName = null;
+      if (gltf.animations && gltf.animations.length) {
+        const mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          try { playerAnim.actions[clip.name] = mixer.clipAction(clip); } catch (_) {}
+        });
+        const idleClip = gltf.animations.find((a) => /^idle/i.test(a.name));
+        const walkClip = gltf.animations.find((a) => /^walk$/i.test(a.name));
+        const psionicClip = gltf.animations.find((a) => a !== idleClip && a !== walkClip);
+        if (idleClip) playerAnim.actions.Idle = playerAnim.actions[idleClip.name];
+        if (walkClip) playerAnim.actions.Walk = playerAnim.actions[walkClip.name];
+        if (psionicClip) playerAnim.actions.Psionic = playerAnim.actions[psionicClip.name];
+        const first = playerAnim.actions.Idle || playerAnim.actions[gltf.animations[0].name];
+        if (first) { first.play(); playerAnim.current = first; playerAnim.currentName = 'Idle'; }
+        playerAnim.mixer = mixer;
+        playerMixers.push(mixer);
+        console.log('[neon-rigged-test] playing clip', (idleClip || gltf.animations[0]).name, 'of', gltf.animations.map((a) => a.name));
+        console.log('[neon-rigged-test] clips', Object.keys(playerAnim.actions));
+      }
     }
 
     // Tiered load: asks for the copy matching glbLod first; any failure falls through to the other copy, then onFail
@@ -2210,6 +2276,37 @@
       facing.add(model);
       logoGroup.add(facing);
     }, undefined, () => { /* logo stays unmounted on failure */ });
+
+    // STASIS TEST (Nov 8, 2026, User's voice call: "put it straight into
+    // the game" to test). ?stage=stasis loads the Tripo
+    // stasis-chamber-room.glb — NOT a cryo chamber — as the D3 Aux Bay
+    // stasis room on the ship walkway, so Jasmine can walk in and see the
+    // layout. Test only, not a canon lock, not the final room. No collision
+    // in this test: the player can pass through the room walls.
+    // Layout: the file is ~0.97 x 0.43 x 0.98 m (Blender-measured bbox),
+    // scaled so it is ~8 m wide x ~3.5 m deep x ~8 m tall — fits the 10.5 m
+    // deck clear height. Center (0, 0, -12) on the walkway; the procedural
+    // VAL-18 pod stays at (4.2, 0, -8), just outside the room. Rotation PI:
+    // the file's open side faces +Z and the spawn is at z=-16, so the open
+    // front faces the player walking up from the deck. Floor sits on y=0.
+    const STASIS_TEST = new URLSearchParams(location.search).get('stage') === 'stasis';
+    if (STASIS_TEST) {
+      const stasisGroup = new THREE.Group();
+      stasisGroup.position.set(0, 0, -12);
+      stasisGroup.rotation.y = Math.PI;
+      worldGroup.add(stasisGroup);
+      gltfLoader.load('assets/stasis-chamber-room.glb', (gltf) => {
+        const model = gltf.scene;
+        const box = new THREE.Box3().setFromObject(model);
+        const size = new THREE.Vector3(); box.getSize(size);
+        const center = new THREE.Vector3(); box.getCenter(center);
+        const s = 8 / size.x; // ~8 m wide
+        model.scale.setScalar(s);
+        model.position.set(-center.x * s, -box.min.y * s, -center.z * s);
+        stasisGroup.add(model);
+        console.log('[stasis-test] room mounted, file size', size, 'scale', s);
+      }, undefined, () => { console.warn('[stasis-test] stasis-chamber-room.glb failed to load'); });
+    }
 
     // Weak-device step-down for the character models (skipped when ?gfx= is forced, like the tier guard):
     // after a mount, average 120 frames; under 28 fps on the hi LOD reloads the lite LOD. The lite LOD is kept
@@ -2525,7 +2622,9 @@
       sideFogGroup.visible = !insideShip && sideView;
       for (const m of rollingMistLayers) if (m.userData.hiOnly) m.visible = gfxTier === 'hi';
       document.body.classList.toggle('nv-outside', !insideShip);
-      document.getElementById('zone-pill').textContent = insideShip
+      document.getElementById('zone-pill').textContent = (typeof STASIS_TEST !== 'undefined' && STASIS_TEST && playerGroup.position.z < -10 && playerGroup.position.z > -14 && Math.abs(playerGroup.position.x) < 4)
+        ? 'ZONE: STASIS TEST — AUX BAY'
+        : insideShip
         ? 'ZONE: INFINITI 6 DECK'
         : (playerGroup.position.z > 52 ? 'ZONE: SUTRO BATHS' : 'ZONE: GIGAS GARDEN');
 
@@ -3140,6 +3239,12 @@
       }
 
       const speed = state.activeSyncForm === 'GLIDE' ? 0.22 : 0.16;
+      // Rigged-player animation state (Walk wiring, Nov 11, 2026 — Val
+      // precedent, Oct 27): standing -> Idle, moving -> Walk. Touch /
+      // joystick input counts as moving (it is already in dx/dz above).
+      // No Run clip exists for Neon, so Shift is NOT mapped to a clip.
+      // setPlayerAnimation no-ops when the clip is already playing.
+      if (NEON_RIGGED_TEST) setPlayerAnimation((dx !== 0 || dz !== 0) ? 'Walk' : 'Idle');
       if (state.viewMode === 'GARDEN') {
         // Camera looks down +z, so screen-right is -x and screen-up is +z
         playerGroup.position.x = THREE.MathUtils.clamp(playerGroup.position.x - dx * speed, -16, 16);
@@ -3220,6 +3325,7 @@
       const bugDt = Math.min(0.1, (nowMs - (animate.lastBug || nowMs)) / 1000);
       animate.lastBug = nowMs;
       creatureMixers.forEach((m) => m.update(bugDt));
+      playerMixers.forEach((m) => m.update(bugDt));
       mistTime.value = t * MIST_MOTION;
       if (mistGroup.visible) {
         for (const m of mistGroup.children) m.position.x = m.userData.baseX + Math.sin(t * 0.25 + m.userData.phase) * 2.2;
@@ -3284,6 +3390,10 @@
 
     window.NVGame.gfx = () => gfxTier;
     window.NVGame.resetRun = resetRun;
+    // Test hook for the rigged player: window.NVGame.playerAnimation('Psionic')
+    // plays the Psionic Idle clip; ('Idle') / ('Walk') select the others.
+    window.NVGame.playerAnimation = (name) => setPlayerAnimation(name);
+    window.NVGame.playerAnimationName = () => playerAnim.currentName;
 
     /* =========================================================================
        11. TOUCH CONTROLS (coarse pointers): move stick + gesture camera
