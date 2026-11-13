@@ -135,7 +135,7 @@
     <span class="dim">Ruin stand-in: f1_ruin reference only (concrete · ferns · pink flowers · mist · teal strips)</span><br />
     <span class="warn">NOT built: glass beach · cliff · tree line · Sutro Baths · First Water · characters</span><br />
     <span class="dim">Slots: ground (Sickle Coast) · tree line · cliff · hull — see record</span><br />
-    <span class="dim">Ground: ocean-water GIF stand-in (temporary blue water)</span><br />
+    <span class="dim">Ground: ocean-water GIF stand-in (temporary blue water, 25% transparent over a seabed)</span><br />
     <span class="dim">Drag to orbit · scroll to zoom · no systems yet</span>
   </div>
   <div id="scale">Hull 110 m × 45 m × 20–30 m · sky dome 10× world (~32 km) · *sun identity pending her word</div>
@@ -319,6 +319,32 @@
     waterVideo.play().catch((e) => {
       console.warn('[level2] ocean-water video autoplay blocked, GIF frame stays:', e);
     });
+
+    // --- Water transparency (Nov 12, 2026, User's order): the ocean is
+    // 25% transparent (opacity 0.75) over a seabed, so the water has
+    // depth instead of sitting as an opaque sheet. In Level 2 the water
+    // lives in terrainMat (GIF frame + WebM VideoTexture on the terrain
+    // base), so the transparency goes on that material. depthWrite off
+    // is per the order; the seabed and hull still depth-test correctly
+    // because they render in the opaque pass first.
+    terrainMat.transparent = true;
+    terrainMat.opacity = 0.75;
+    terrainMat.depthWrite = false;
+    terrainMat.needsUpdate = true;
+    // Seabed beneath the ocean plane: deep indigo bed at y = -5.5,
+    // below the lowest terrain dip (~-4.7 m at full undulation), so the
+    // transparency never exposes the bare clear colour or the dome's
+    // lower half — you see dark bed through the water.
+    const seabed = new THREE.Mesh(
+      new THREE.PlaneGeometry(1000, 1000),
+      new THREE.MeshStandardMaterial({ color: 0x14082e, metalness: 0, roughness: 1 }),
+    );
+    seabed.rotation.x = -Math.PI / 2;
+    seabed.position.y = -5.5;
+    seabed.name = 'seabed';
+    scene.add(seabed);
+    meshCount++;
+
     scene.add(terrainBase);
     meshCount++;
 
