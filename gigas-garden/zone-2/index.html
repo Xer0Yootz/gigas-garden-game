@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="icon" href="data:," />
-  <title>Gigas Garden — Level 2 (Empty Garden Shell)</title>
+  <title>Gigas Garden — Zone 2 (Empty Garden Shell)</title>
   <!--
     ===========================================================================
-    NEON VIGIL — GAME REBUILD, LEVEL 2: EMPTY GARDEN SHELL
-    Level 2 is the Gigas Garden — the living continent OUTSIDE the ship.
+    NEON VIGIL — GAME REBUILD, ZONE 2: EMPTY GARDEN SHELL
+    Zone 2 is the Gigas Garden — the living continent OUTSIDE the ship.
     Built Nov 10, 2026, on branch merge/prototype-into-main, on Jasmine's
     word ("Unhold the Gigas Garden shell — build it now instead of waiting
     for her Drive assets"). Empty shell only: geometry, no movement rules,
@@ -62,7 +62,7 @@
     - Crashed Infinity 6: simple procedural hull form at locked
       dimensions (110 x 45 x 20-30 m varying, imperfect oblong, taller
       through the middle, slightly lopsided), dark gunmetal with thin
-      cyan-teal rib rings — same hull language as Level 1. NOT the
+      cyan-teal rib rings — same hull language as Zone 1. NOT the
       detailed interior GLB (existing variants are retired-scale
       interiors; which variant is canonical is not established).
       A subtle dark crash scar under the hull is provisional — flagged
@@ -74,13 +74,13 @@
       stand-in. No other Flow reference is used here: the bridge
       interiors with city skyline and the ocean/ship silhouette are
       not needed for an empty outdoor shell.
-    - Asset/texture slots (same idea as Level 1's bellyBay
+    - Asset/texture slots (same idea as Zone 1's bellyBay
       setBellyWallTexture): ground slot (Sickle Coast GLB), tree-line
       slot, cliff slot, hull-replacement slot. Named groups, modular,
       changeable.
 
     Tech: standalone single file, Three.js 0.160.0 via unpkg (same version
-    as Level 1 / the old world). No auth gate, no Remix SDK, no GLBs yet.
+    as Zone 1 / the old world). No auth gate, no Remix SDK, no GLBs yet.
     Dev cameras: ?cam=orbit (default, wide form check), ?cam=ground
     (low, past the hull toward the north + sun), ?cam=hull (close on
     the crashed ship), ?cam=sky (up at the pink sun), ?cam=ruin (the
@@ -128,7 +128,7 @@
 <body>
   <div id="app"></div>
   <div id="hud">
-    <b>GIGAS GARDEN — LEVEL 2</b><br />
+    <b>GIGAS GARDEN — ZONE 2</b><br />
     Empty garden shell — outdoor, not black<br />
     <span class="dim">Crash site: hull on the beach, cliff base, tree line</span><br />
     <span class="cyan">Pink sun: striped disc — rises/sets, drives the light dawn→dusk*</span><br />
@@ -149,8 +149,8 @@
     const errBox = document.getElementById('err');
     function fail(msg) {
       errBox.style.display = 'block';
-      errBox.textContent = 'LEVEL-2 SHELL ERROR: ' + msg;
-      console.error('LEVEL-2 SHELL ERROR:', msg);
+      errBox.textContent = 'ZONE-2 SHELL ERROR: ' + msg;
+      console.error('ZONE-2 SHELL ERROR:', msg);
     }
     window.addEventListener('error', (e) => fail(e.message || String(e.error || e)));
 
@@ -254,7 +254,7 @@
     // the first-frame texture (it always shows), and a VP9 loop converted
     // from the same GIF (ocean-water-seamless.webm) drives a VideoTexture
     // that takes over once it can play — that is the motion. Both are
-    // local copies in level-2/; the canon reference GIF is untouched.
+    // local copies in zone-2/; the canon reference GIF is untouched.
     // DE-TILED Nov 10, 2026: the seamless files are 2x2 mirrored mosaics
     // of the locked GIF, so the tile edges match and there is no visible
     // grid; MirroredRepeatWrapping + a second layer of the same water
@@ -314,15 +314,15 @@
       const sh = terrainMat.userData.detailShader;
       if (sh) sh.uniforms.waterDetailMap.value = vDetail;
       window.__waterDetailTexture = vDetail;
-      console.log('[level2] ocean-water video texture live on terrain');
+      console.log('[zone2] ocean-water video texture live on terrain');
     });
     waterVideo.play().catch((e) => {
-      console.warn('[level2] ocean-water video autoplay blocked, GIF frame stays:', e);
+      console.warn('[zone2] ocean-water video autoplay blocked, GIF frame stays:', e);
     });
 
     // --- Water transparency (Nov 12, 2026, User's order): the ocean is
     // 25% transparent (opacity 0.75) over a seabed, so the water has
-    // depth instead of sitting as an opaque sheet. In Level 2 the water
+    // depth instead of sitting as an opaque sheet. In Zone 2 the water
     // lives in terrainMat (GIF frame + WebM VideoTexture on the terrain
     // base), so the transparency goes on that material. depthWrite off
     // is per the order; the seabed and hull still depth-test correctly
@@ -358,11 +358,11 @@
     function setGroundAsset(model) {
       terrainBase.visible = false;
       groundSlot.add(model);
-      console.log('[level2] ground asset mounted in groundSlot; terrainBase hidden');
+      console.log('[zone2] ground asset mounted in groundSlot; terrainBase hidden');
     }
 
     // --- Crashed Infinity 6: simple procedural hull ---------------------------
-    // Same hull language as Level 1 (capsule, imperfect oblong, taller
+    // Same hull language as Zone 1 (capsule, imperfect oblong, taller
     // through the middle, slightly lopsided), SOLID here — a crashed ship
     // on the beach, not a wireframe. Resting on the terrain with a slight
     // list and yaw, bow toward +X. NOT the detailed interior GLB.
@@ -406,7 +406,7 @@
     function setHull(model) {
       hullGroup.visible = false;
       hullSlot.add(model);
-      console.log('[level2] hull asset mounted in hullSlot; procedural hull hidden');
+      console.log('[zone2] hull asset mounted in hullSlot; procedural hull hidden');
     }
     // Provisional crash scar: dark ellipse under the hull. Flagged —
     // part of the crash itself, not a location; removable in one line.
@@ -438,7 +438,7 @@
     scene.add(treeLineSlot);
     function setTreeLine(model) {
       treeLineSlot.add(model);
-      console.log('[level2] tree-line asset mounted in treeLineSlot');
+      console.log('[zone2] tree-line asset mounted in treeLineSlot');
     }
 
     // --- Cliff slot (EMPTY — no cliff invented) --------------------------------
@@ -452,7 +452,7 @@
     scene.add(cliffSlot);
     function setCliff(model) {
       cliffSlot.add(model);
-      console.log('[level2] cliff asset mounted in cliffSlot');
+      console.log('[zone2] cliff asset mounted in cliffSlot');
     }
 
     // --- Ruin stand-in: f1_ruin reference ONLY --------------------------------
@@ -542,7 +542,7 @@
       cliff: { slot: 'cliffSlot', asset: 'cliff-glb', filled: false },
       hull: { slot: 'hullSlot', asset: 'infinity-6-glb', filled: false },
     };
-    window.__level2 = {
+    window.__zone2 = {
       scene, camera, renderer, ready: false, meshCount,
       slots, skysphere,
       sky: { radius: SKY_RADIUS, worldRadius: skysphere.WORLD_RADIUS, timeOfDay: skysphere.getTimeOfDay() },
@@ -566,10 +566,10 @@
       controls.update();
       renderer.render(scene, camera);
       if (++frames === 5) {
-        window.__level2.ready = true;
-        console.log('LEVEL-2 SHELL READY', JSON.stringify({
+        window.__zone2.ready = true;
+        console.log('ZONE-2 SHELL READY', JSON.stringify({
           cam: camName, meshes: meshCount,
-          level: 'Level 2 — Gigas Garden (empty shell)',
+          level: 'Zone 2 — Gigas Garden (empty shell)',
           hull: 'Infinity 6 crashed, 110 x 45 x 20-30 m',
           sky: 'nv-skysphere: gradient dome 10x world + moving striped sun + drifting clouds',
           skyRadius: SKY_RADIUS, timeOfDay: skysphere.getTimeOfDay(),

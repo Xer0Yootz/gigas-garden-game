@@ -1207,7 +1207,7 @@
 
     // Camera far raised Nov 11, 2026 for the NV Skysphere port: the dome is
     // 10x the main-game world (worldRadius 120 m -> dome 1,200 m), so the
-    // far plane must clear it (was 260, which clipped the Level 2 sky).
+    // far plane must clear it (was 260, which clipped the Zone 2 sky).
     const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 2600);
 
     // Camera-inside auto-hide: hide any mesh whose bounding sphere contains the camera,
@@ -1309,13 +1309,13 @@
     scene.add(hemiLight, deckFill, cyanKey, magentaRim, sunBack, sunBack.target);
 
     // --- Sky: NV Skysphere port (Nov 11, 2026, dome + sun in EVERY level) ----
-    // Same module as Level 2 (./nv-skysphere.js), rescaled for the main
+    // Same module as Zone 2 (./nv-skysphere.js), rescaled for the main
     // game's smaller world: zones span z -18 to 68, x -16 to 16, so the
-    // world extent is ~120 m (dome 10x = 1,200 m) instead of Level 2's
+    // world extent is ~120 m (dome 10x = 1,200 m) instead of Zone 2's
     // 2 mi. Sun distance 300 m keeps its ~0.1 rad angular size, beyond
     // the striped-sun backdrop plate at z = 72. azimuthOffset -PI turns
     // midday toward +Z (the garden / plate side), matching the existing
-    // sunBack light at (0, 9, 95) — Level 2's midday is toward -Z.
+    // sunBack light at (0, 9, 95) — Zone 2's midday is toward -Z.
     // Pink-to-purple gradient, moving striped sun, NO cyan in the sky.
     // sunBack + hemiLight are driven by the sun (position/colour/strength
     // follow its elevation); cyanKey / magentaRim / deckFill are untouched.

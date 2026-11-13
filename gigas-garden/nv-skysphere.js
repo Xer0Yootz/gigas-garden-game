@@ -1,6 +1,6 @@
 // ===========================================================================
 // NEON VIGIL — NV SKYSPHERE (reusable module)
-// Level 2 Gigas Garden sky: gradient dome + moving striped pink sun +
+// Zone 2 Gigas Garden sky: gradient dome + moving striped pink sun +
 // drifting cloud layer. Plain JS, no new dependencies (takes THREE).
 //
 // Canon locks (Nov 10, 2026, Jasmine's word):
@@ -29,21 +29,21 @@
 //   module does not rename or re-identify it, and adds no lore text
 //   about it.
 // - Size: the dome radius is TEN TIMES the world extent, from ONE named
-//   constant. World extent here = the Level 2 Garden, far ruins ~2 mi
+//   constant. World extent here = the Zone 2 Garden, far ruins ~2 mi
 //   out (WORLD_RADIUS = 2 mi in metres). Change WORLD_RADIUS and the
 //   whole sky (dome, sun distance/size, clouds, camera far) rescales.
 // ===========================================================================
 
-export const WORLD_RADIUS = 3218.688; // metres — ~2 mi, the far-ruins extent (Level 2 default)
+export const WORLD_RADIUS = 3218.688; // metres — ~2 mi, the far-ruins extent (Zone 2 default)
 export const SKY_RADIUS = WORLD_RADIUS * 10; // 32,186.88 m — dome radius, 10x world
 export const CAMERA_FAR = SKY_RADIUS * 2; // camera far plane must exceed the dome
 
-// Defaults below are the Level 2 values. createSkysphere() takes
+// Defaults below are the Zone 2 values. createSkysphere() takes
 // worldRadius / sunDistance / azimuthOffset options so the same module
 // ports to a smaller world (main game, Nov 11, 2026): the dome is
 // ALWAYS 10x the world, the sun keeps its ~0.1 rad angular size, and
 // the azimuth offset turns midday toward the world's sun side.
-// Level 2: SUN_DISTANCE 700 m — just beyond the far-ruin plates (380 m).
+// Zone 2: SUN_DISTANCE 700 m — just beyond the far-ruin plates (380 m).
 // The DOME is 10x the world; the SUN is placed for the composition, not
 // on the dome: at ~700 m its parallax matches the plates, so the disc
 // sits low in the gap between them from the orbit AND ground cameras,
@@ -218,7 +218,7 @@ export function createSkysphere(THREE, options = {}) {
     azimuthOffset = 0, // rotates the sun arc (main game: -PI, midday toward +Z)
   } = options;
 
-  // Per-instance scale, derived from the world — same ratios as Level 2.
+  // Per-instance scale, derived from the world — same ratios as Zone 2.
   const skyRadius = worldRadius * 10;
   const cameraFar = skyRadius * 2;
   const sunRadius = sunDistance * Math.tan(SUN_ANGULAR_RADIUS);
@@ -308,7 +308,7 @@ export function createSkysphere(THREE, options = {}) {
     // (x 0.12, max ~10.8 deg): at full strength the horizon would lay
     // on its side at dawn/dusk, since this sun's elevation spans only
     // 2-8 deg. The tilt here is relative to each world's own arc
-    // (azimuthOffset removed), so Level 2 and the main game match.
+    // (azimuthOffset removed), so Zone 2 and the main game match.
     dome.rotation.z = (Math.PI * t - Math.PI / 2) * 0.12;
     const dayF = Math.sin(Math.PI * t); // 0 at rise/set, 1 at midday
     if (sunLight) {

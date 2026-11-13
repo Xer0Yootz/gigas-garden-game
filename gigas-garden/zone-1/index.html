@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="icon" href="data:," />
-  <title>Infinity 6 — Level 1 (Empty World Shell)</title>
+  <title>Infinity 6 — Zone 1 (Empty World Shell)</title>
   <!--
     ===========================================================================
     NEON VIGIL — GAME REBUILD, STAGE 1: EMPTY WORLD SHELL
-    Level 1 is the INSIDE of the Infinity 6. Outside the ship is the sky
-    dome + moving striped pink sun — the same sky as Level 2 (one sky
+    Zone 1 is the INSIDE of the Infinity 6. Outside the ship is the sky
+    dome + moving striped pink sun — the same sky as Zone 2 (one sky
     across the whole game, Nov 10, 2026 standing rule).
-    The Gigas Garden is a SEPARATE level, not part of Level 1.
+    The Gigas Garden is a SEPARATE level, not part of Zone 1.
     Player starts inside the ship: belly bay, D3 (where she wakes).
     Built Nov 9, 2026, on branch merge/prototype-into-main. No systems yet:
     no movement rules, no activities, no rank, no "winning", no new rooms,
@@ -78,7 +78,7 @@
     ?cam=d1win (D1 quarters window), ?cam=sky (dome + sun + ship exterior).
     ?cam=topD1 / topD2 / topD3 (one top view per deck), ?cam=heads,
     ?cam=mess, ?cam=labhydro (lab grow beds). ?time=0..1 sets the sun
-    (default 0.5 midday), same as Level 2.
+    (default 0.5 midday), same as Zone 2.
     ===========================================================================
   -->
   <script type="importmap">
@@ -121,7 +121,7 @@
 <body>
   <div id="app"></div>
   <div id="hud">
-    <b>INFINITY 6 — LEVEL 1</b><br />
+    <b>INFINITY 6 — ZONE 1</b><br />
     Empty world shell — Stage 1<br />
     <span class="dim">D1 Upper — bridge (1 chair) · Cyphr Bay aft</span><br />
     <span class="dim">D2 Main — reactor core · engine room · mess · quarters</span><br />
@@ -149,14 +149,14 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { createSkysphere, CAMERA_FAR } from '../level-2/nv-skysphere.js';
+    import { createSkysphere, CAMERA_FAR } from '../zone-2/nv-skysphere.js';
     import { Reflector } from 'three/addons/objects/Reflector.js';
 
     const errBox = document.getElementById('err');
     function fail(msg) {
       errBox.style.display = 'block';
-      errBox.textContent = 'LEVEL-1 SHELL ERROR: ' + msg;
-      console.error('LEVEL-1 SHELL ERROR:', msg);
+      errBox.textContent = 'ZONE-1 SHELL ERROR: ' + msg;
+      console.error('ZONE-1 SHELL ERROR:', msg);
     }
     window.addEventListener('error', (e) => fail(e.message || String(e.error || e)));
 
@@ -228,11 +228,11 @@
 
     // --- Sky dome + moving sun (EVERY level, Nov 10, 2026 standing rule) -------
     // The ship's viewports look out onto the same dome + striped pink sun as
-    // Level 2 — one sky across the whole game. Same module, same 10x dome,
+    // Zone 2 — one sky across the whole game. Same module, same 10x dome,
     // same pink-to-purple gradient, same moving sun. The sun is OUTSIDE the
-    // ship; Level 1 keeps its own interior lighting (no sun/hemi light is
+    // ship; Zone 1 keeps its own interior lighting (no sun/hemi light is
     // passed in — the skysphere only adds the dome, sun, and clouds).
-    // ?time=0..1 sets the sun (default 0.5 midday), same as Level 2.
+    // ?time=0..1 sets the sun (default 0.5 midday), same as Zone 2.
     const _t = parseFloat(new URLSearchParams(location.search).get('time') || '0.5');
     const timeParam = Math.min(1, Math.max(0, Number.isNaN(_t) ? 0.5 : _t));
     const sky = createSkysphere(THREE, { timeOfDay: timeParam, timeScale: 1 });
@@ -412,7 +412,7 @@
     // --- Belly bay materials (55ba667 language; shared, named, replaceable)
     const bellyWallMat = new THREE.MeshStandardMaterial({ color: 0x1a1e24, metalness: 0.75, roughness: 0.55, side: THREE.DoubleSide });
     // TEXTURE SLOT: belly bay wall texture lands here when it exists
-    // (Gemini retry / Flow Studio). Set via window.__level1.bellyBay
+    // (Gemini retry / Flow Studio). Set via window.__zone1.bellyBay
     // .setWallTexture(tex) — it assigns bellyWallMat.map with repeat
     // wrapping; every wall panel shares this one material, so one swap
     // re-skins the whole bay. Until then the panels are procedural.
@@ -1779,7 +1779,7 @@
     });
 
     // Expose a small handle for verification tooling.
-    window.__level1 = { scene, camera, renderer, ready: false, meshCount, bridge: bridgeStatus, avatar: avatarStatus, stasis: stasisStatus, glass: glassStatus, arrows: ARROW_XS.length, walls: wallsStatus, bellyBay: bellyBayStatus, lounge: loungeStatus, rooms: roomsStatus, sky: skyStatus, setBellyWallTexture };
+    window.__zone1 = { scene, camera, renderer, ready: false, meshCount, bridge: bridgeStatus, avatar: avatarStatus, stasis: stasisStatus, glass: glassStatus, arrows: ARROW_XS.length, walls: wallsStatus, bellyBay: bellyBayStatus, lounge: loungeStatus, rooms: roomsStatus, sky: skyStatus, setBellyWallTexture };
 
     let frames = 0;
     function tick() {
@@ -1793,10 +1793,10 @@
       // No avatar mixer: the bald placeholder has no animations, she stands still.
       renderer.render(scene, camera);
       if (++frames === 5) {
-        window.__level1.ready = true;
-        console.log('LEVEL-1 SHELL READY', JSON.stringify({
+        window.__zone1.ready = true;
+        console.log('ZONE-1 SHELL READY', JSON.stringify({
           cam: camName, meshes: meshCount,
-          ship: 'Infinity 6', level: 'Level 1 — ship interior',
+          ship: 'Infinity 6', level: 'Zone 1 — ship interior',
           dims: '110 x 45 x 20-30 m', decks: ['D1', 'D2', 'D3'],
           spawn: 'belly bay, D3', outside: 'sky dome + moving striped sun',
           stasis: stasisStatus, glass: glassStatus, arrows: ARROW_XS.length,
