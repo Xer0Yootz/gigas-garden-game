@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" href="data:," />
+  <title>Gigas Garden — Zone 3</title>
+  <!--
+    Zone 3 empty shell. Sky dome and moving sun come from the Zone 2
+    skysphere module, driven the same way (?time=0..1, default midday).
+    Two standing ruin towers and one flat collapsed slab on a ground
+    plane. No fog. The models are meshopt-compressed with WebP textures.
+  -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background: #2e1440; }
+    #app { position: fixed; inset: 0; }
+    canvas { display: block; }
+    #hud {
+      position: fixed; top: 12px; left: 12px; z-index: 10;
+      font-family: "Courier New", Courier, monospace; color: #ffd7e8;
+      background: rgba(20, 4, 24, 0.72); border: 1px solid rgba(255, 94, 138, 0.45);
+      padding: 10px 12px; max-width: 360px; pointer-events: none;
+      font-size: 12px; line-height: 1.55;
+    }
+    #hud b { color: #fff; letter-spacing: 1px; }
+    #hud .dim { color: #c98aa8; }
+    #scale {
+      position: fixed; bottom: 12px; right: 12px; z-index: 10;
+      font-family: "Courier New", Courier, monospace; color: #c98aa8;
+      background: rgba(20, 4, 24, 0.72); border: 1px solid rgba(255, 94, 138, 0.3);
+      padding: 6px 10px; font-size: 11px; pointer-events: none;
+    }
+    #err {
+      display: none; position: fixed; top: 12px; right: 12px; z-index: 20;
+      font-family: "Courier New", Courier, monospace; color: #fff;
+      background: rgba(160, 10, 30, 0.92); border: 1px solid #ff5566;
+      padding: 10px 12px; max-width: 420px; font-size: 12px; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="hud">
+    <b>GIGAS GARDEN — ZONE 3</b><br />
+    <span class="dim">Drag to orbit · scroll to zoom</span><br />
+    <span class="dim">?cam=orbit / top / ground · ?time=0..1</span>
+  </div>
+  <div id="scale">scale 80</div>
+  <div id="err"></div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+    import { createSkysphere, CAMERA_FAR } from '../zone-2/nv-skysphere.js';
+
+    const errBox = document.getElementById('err');
+    function fail(msg) {
+      errBox.style.display = 'block';
+      errBox.textContent = 'ZONE-3 SHELL ERROR: ' + msg;
+      console.error('ZONE-3 SHELL ERROR:', msg);
+    }
+    window.addEventListener('error', (e) => fail(e.message || String(e.error || e)));
+
+    // Raw models are about 1 m tall. Scale 80 puts the towers at
+    // ~92 m and ~101 m, with a ~126 m gap between their footprints.
+    const SCALE = 80;
+    const RUINS = [
+      { id: '91688', file: 'ruined_megastructures_91688.glb', x: -120, z: 0, lift: 0 },
+      { id: '97923', file: 'ruined_megastructures_97923.glb', x: 120, z: 0, lift: 0 },
+      { id: '98149', file: 'ruined_megastructures_98149.glb', x: 18.67, z: 0, lift: 0.05 },
+    ];
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x140810);
+
+    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.5, CAMERA_FAR);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setClearColor(0x140810, 1);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.getElementById('app').appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+
+    // Same sky-driven pair as Zone 2: the module moves the directional
+    // light onto the sun and drives its colour and strength. Shadows
+    // use a fixed orthographic box around the ruins (the light stays
+    // 1000 m out, aimed at the origin).
+    const hemiLight = new THREE.HemisphereLight(0xff9ec4, 0x2c2624, 0.85);
+    scene.add(hemiLight);
+    const sunLight = new THREE.DirectionalLight(0xffb0c8, 1.6);
+    sunLight.position.set(0, 120, -700);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.set(2048, 2048);
+    sunLight.shadow.camera.left = -280;
+    sunLight.shadow.camera.right = 280;
+    sunLight.shadow.camera.top = 280;
+    sunLight.shadow.camera.bottom = -280;
+    sunLight.shadow.camera.near = 700;
+    sunLight.shadow.camera.far = 1400;
+    sunLight.shadow.bias = -0.0004;
+    sunLight.shadow.normalBias = 0.35;
+    sunLight.shadow.camera.updateProjectionMatrix();
+    sunLight.target.position.set(0, 0, 0);
+    scene.add(sunLight, sunLight.target);
+
+    const timeParam = parseFloat(new URLSearchParams(location.search).get('time'));
+    const skysphere = createSkysphere(THREE, {
+      timeOfDay: Number.isNaN(timeParam) ? 0.5 : timeParam,
+      sunLight,
+      hemiLight,
+    });
+    scene.add(skysphere.group);
+
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(4000, 4000),
+      new THREE.MeshStandardMaterial({ color: 0x3e342f, metalness: 0.04, roughness: 0.96 })
+    );
+    ground.geometry.rotateX(-Math.PI / 2);
+    ground.receiveShadow = true;
+    ground.name = 'ground';
+    scene.add(ground);
+
+    function round(n) { return Math.round(n * 100) / 100; }
+    function placeModel(root, spec) {
+      root.scale.setScalar(SCALE);
+      root.position.set(0, 0, 0);
+      root.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(root);
+      const cx = (box.min.x + box.max.x) / 2;
+      const cz = (box.min.z + box.max.z) / 2;
+      root.position.set(spec.x - cx, -box.min.y + spec.lift, spec.z - cz);
+      root.updateMatrixWorld(true);
+      const seated = new THREE.Box3().setFromObject(root);
+      return {
+        position: [round(root.position.x), round(root.position.y), round(root.position.z)],
+        center: [
+          round((seated.min.x + seated.max.x) / 2),
+          round((seated.min.y + seated.max.y) / 2),
+          round((seated.min.z + seated.max.z) / 2),
+        ],
+        size: [
+          round(seated.max.x - seated.min.x),
+          round(seated.max.y - seated.min.y),
+          round(seated.max.z - seated.min.z),
+        ],
+      };
+    }
+
+    const ruinStatus = {};
+    for (const spec of RUINS) {
+      ruinStatus[spec.id] = { file: spec.file, loaded: false, error: null, scale: SCALE, position: null, center: null, size: null };
+    }
+    let pending = RUINS.length;
+
+    const loader = new GLTFLoader();
+    loader.setMeshoptDecoder(MeshoptDecoder);
+    for (const spec of RUINS) {
+      loader.load('./assets/' + spec.file, (gltf) => {
+        const placed = placeModel(gltf.scene, spec);
+        gltf.scene.traverse((obj) => {
+          if (!obj.isMesh) return;
+          obj.castShadow = true;
+          obj.receiveShadow = true;
+        });
+        gltf.scene.name = spec.id;
+        scene.add(gltf.scene);
+        const status = ruinStatus[spec.id];
+        status.loaded = true;
+        status.position = placed.position;
+        status.center = placed.center;
+        status.size = placed.size;
+        console.log('[zone3] scale', SCALE, spec.id, JSON.stringify(placed));
+        if (--pending === 0) console.log('[zone3] all ruin models loaded');
+      }, undefined, (err) => {
+        const msg = (err && err.message) ? err.message : String(err);
+        ruinStatus[spec.id].error = msg;
+        fail(spec.file + ': ' + msg);
+        pending--;
+      });
+    }
+
+    const cams = {
+      orbit:  { pos: [340, 170, 420], tgt: [0, 40, 0] },
+      top:    { pos: [0, 520, 0.01],  tgt: [0, 0, 0] },
+      ground: { pos: [78, 2.2, 96], tgt: [0, 32, -8] },
+    };
+    const camName = (new URLSearchParams(location.search).get('cam') || 'orbit');
+    const cam = cams[camName] || cams.orbit;
+    camera.position.set(...cam.pos);
+    controls.target.set(...cam.tgt);
+    controls.update();
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    function meshCount() {
+      let n = 0;
+      scene.traverse((obj) => { if (obj.isMesh) n++; });
+      return n;
+    }
+
+    window.__zone3 = {
+      scene, camera, renderer, ready: false, meshCount: 0,
+      scale: SCALE, ruins: ruinStatus, skysphere,
+      sky: { radius: skysphere.SKY_RADIUS, worldRadius: skysphere.WORLD_RADIUS, timeOfDay: skysphere.getTimeOfDay() },
+    };
+
+    const clock = new THREE.Clock();
+    let frames = 0;
+    let reported = false;
+    function tick() {
+      requestAnimationFrame(tick);
+      skysphere.update(clock.getDelta());
+      controls.update();
+      renderer.render(scene, camera);
+      frames++;
+      const loaded = RUINS.every((spec) => ruinStatus[spec.id].loaded);
+      if (!reported && loaded && frames >= 2) {
+        reported = true;
+        window.__zone3.ready = true;
+        window.__zone3.meshCount = meshCount();
+        window.__zone3.sky.timeOfDay = skysphere.getTimeOfDay();
+        console.log('ZONE-3 SHELL READY', JSON.stringify({
+          cam: camName,
+          meshes: window.__zone3.meshCount,
+          level: 'Zone 3 — ruins (empty shell)',
+          scale: SCALE,
+          ruins: ruinStatus,
+        }));
+      }
+    }
+    tick();
+  </script>
+</body>
+</html>
