@@ -890,8 +890,8 @@
       // so lite tier loads the same Tripo model; the procedural stand-in
       // remains the slow-device fallback (watchModelCost, below).
       praxiaLite: 'assets/praxia.glb',
-      valGLB: 'assets/val17.glb',                     // VAL-17 drone body (new slot, no procedural stand-in)
-      valLite: 'assets/val17-lite.glb',
+      valGLB: 'assets/val18.glb',                     // VAL 18 — player body (User's Nov 13, 2026: rigged Val is Val 18, renamed)
+      valLite: 'assets/val18.glb',                    // same file as hi tier (no separate lite build)
       // Creature slots: CC0 Quaternius bees until Flow Studio chitin bugs land (credits in assets/CREDITS.md)
       creatureGLB: {
         hauler: 'assets/bug-armabee.glb', // "Armabee Evolved", cyan, biggest
@@ -973,7 +973,7 @@
       hexa:    { name: 'HEXA SIGIL',  spoken: 'Hexa Sigil', portrait: 'assets/portraits/hexa-idle.png',   accent: '#00f0ff', nameColor: '#00f0ff', anim: 'glow' },
       cyphr:   { name: 'CYPHR',       spoken: 'Cyphr',      portrait: 'assets/portraits/cyphr-idle.png',  accent: '#9d4edd', nameColor: '#c9a6ff', anim: 'glow' },
       neon:    { name: 'NEON ULTRA',  portrait: 'assets/portraits/neon.png',   accent: '#ff1e8a', nameColor: '#ff1e8a', anim: 'bob' },
-      val17:   { name: 'VAL 17',      portrait: 'assets/portraits/val17.png',  accent: '#ff6ec7', nameColor: '#ff6ec7', anim: 'bob' },
+      val17:   { name: 'VAL 18',      portrait: 'assets/portraits/val17.png',  accent: '#ff6ec7', nameColor: '#ff6ec7', anim: 'bob' },
       praxia:  { name: 'PRAXIA',      portrait: 'assets/portraits/praxia.png', accent: '#ff1e8a', nameColor: '#ffb3dd', anim: 'glow' },
       gridlog: { name: 'GRID LOG',    portrait: null,                          accent: '#00f0ff', nameColor: '#00f0ff', anim: 'none' }
     };
@@ -1042,7 +1042,7 @@
     const state = {
       viewMode: 'GARDEN', // Strictly 'GARDEN' (3D) or 'SIDE' (2D side-scrolling lane)
       phaseStep: 0,       // 0: Wake -> 1: Console -> 2: Locker -> 3: Airlock Vines (3 cuts) -> 4: Garden Open
-      vineCutsRemaining: 3,
+      vineCutsRemaining: 0, // Nov 13, 2026 strip: gate open, vines node removed,
       pinkNamedOnce: false,
       integrity: 100,
       toolsUnlocked: ['FISTS'],
@@ -1549,15 +1549,7 @@
       return plane;
     }
 
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.bridgeInterior, 0, 4.5, -19.8, 14, 8, 0x190a2e, 0.0);
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.glowForest, -31, 6, 18, 26, 12, 0x1a0826, 0.28); // edge at x = -18: clear of the walk + camera (|x| <= 16)
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.biolumeCoast, 31, 6, 38, 26, 12, 0x07262e, 0.3);
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.stripedSunCoast, 0, 8, 72, 42, 16, 0x2b0928, 0.36);
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.gardenMain, 0, 12, 92, 68, 24, 0x14041d, 0.42);
     // Far coast + Mega-City ruins on the horizon (soft edges so they sit inside the mist)
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.sickleCoast, -34, 7, 50, 30, 20, 0x2a0a33, 0.3, 0.14);
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.megaCityFloodStreet, 34, 8, 60, 30, 20, 0x220a2c, 0.34, 0.14);
-    mountBackdropPlate(DRIVE_BACKDROP_MANIFEST.megaCityGardenRing, -26, 11, 86, 33, 22, 0x1e0a2a, 0.4, 0.14);
 
     // ROCK FORMATIONS + MEGA-CITY RUINS (procedural, garden view only; no files to download).
     // Everything stays outside the walk corridor (|x| <= 18, z -2..70) and off the follow-camera path.
@@ -1752,14 +1744,7 @@
       sideLayers.add(plane);
       return plane;
     }
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.stripedSunCoast, 70, 16, 25, 140, 60, 0x2b0928, 0.4);   // far
     // mid row (soft edges, overlapping): forest > Sickle Coast > biolume coast > drowned Sutro > Mega-City ruins
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.glowForest, 33, 9, -10, 30, 20, 0x1a0826, 0.28, 0.12);
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.sickleCoast, 34, 9, 14, 30, 20, 0x2a0a33, 0.3, 0.12);
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.biolumeCoast, 33, 9, 38, 30, 20, 0x07262e, 0.3, 0.12);
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.sutroDrowned, 34, 9, 62, 30, 20, 0x0a2330, 0.32, 0.12);
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.megaCityGardenRing, 33, 9, 86, 30, 20, 0x1e0a2a, 0.38, 0.12);
-    mountSidePlate(DRIVE_BACKDROP_MANIFEST.bridgeInterior, 7.2, 4.5, -10, 20, 9, 0x190a2e, 0.0);  // deck wall
 
     // Near layer: black rock / vine silhouette strip between the SIDE camera and the lane
     function makeSilhouetteTexture() {
@@ -2046,18 +2031,7 @@
 
     // Ship Interior & Garden Progression Nodes
     const consoleNode = createNode('console', 'Bridge Console (Cyphr)', 0, -14, 0x00f0ff, 0.8);
-    const lockerNode = createNode('locker', 'Maintenance Locker (Laser Cutter)', -4.2, -8, 0x9d4edd, 0.8);
-    const vinesNode = createNode('vines', 'Overgrown Airlock Vines (3 Cuts)', 0, -1, 0x22c55e, 1.3);
-    const plinthNode = createNode('plinth', 'First Ruins Plinth (Machete)', -6, 14, 0xe2e8f0, 0.9);
-    const relicNode = createNode('relic', 'Golden Era Relic Cache', -9, 26, 0x00f0ff, 0.7);
-    const poolNode = createNode('pool_sample', 'First Water Sample Point', 8, 38, 0xb8ff00, 0.8);
-    const haulerNode = createNode('bug_hauler', 'Balt-Shell Carrier [HAULER]', 5, 16, 0x38bdf8, 0.9);
-    const wardenNode = createNode('bug_warden', 'Thorn-Mantid Watcher [WARDEN]', -4, 29, 0xf43f5e, 0.95);
-    const lumenNode = createNode('bug_lumen', 'Moth-Lantern Drifter [LUMEN]', -8, 42, 0xc084fc, 0.9);
-    const diverNode = createNode('bug_diver', 'Pelagic Chitin Skimmer [DIVER]', 10, 41, 0xb8ff00, 0.9);
-    const patrolNode = createNode('patrol', 'Republic Vanguard Patrol (Sutro Baths)', 2, 62, 0xff1e8a, 1.2);
-    const creatureNodes = [haulerNode, wardenNode, lumenNode, diverNode];
-    [...creatureNodes, patrolNode].forEach((n) => toonify(n.group));
+    const creatureNodes = []; // Nov 13, 2026 strip: only Val + the bridge terminal remain
 
     // Praxia Node (6'3", Mantis Head, Compound Pink Eyes, No Mouth, Dragonfly Wings, CANNOT SYNC)
     const praxiaGroup = new THREE.Group();
@@ -2086,8 +2060,9 @@
     praxiaGroup.add(praxiaProcedural);
     worldGroup.add(praxiaGroup);
     toonify(praxiaProcedural);
-    const praxiaEntry = { id: 'praxia', label: 'Praxia', group: praxiaGroup, x: 0, z: 50, active: true };
-    interactables.push(praxiaEntry);
+    // Nov 13, 2026 strip: Praxia removed from the scene (Val + bridge terminal only).
+    praxiaGroup.visible = false;
+    praxiaProcedural.visible = false;
     // PRAXIA BUMP SCENE (placeholder, User's direction Oct 24, 2026): bumping into Praxia
     // triggers a scene; a battle attempt makes her run away. She cannot be synced.
     let praxiaScene = 'idle'; // idle | armed | fleeing | gone
@@ -2142,7 +2117,7 @@
        Growth stages baby -> adolescent -> rideable adult are NOT built here;
        only stage 1 (baby) exists in this prototype.
        ========================================================================= */
-    const petState = { enabled: true, mode: 'FOLLOW', idleMs: 0, lastPlayerX: 0, lastPlayerZ: -16 };
+    const petState = { enabled: false, // Nov 13, 2026 strip: pet removed with everything else mode: 'FOLLOW', idleMs: 0, lastPlayerX: 0, lastPlayerZ: -16 };
     const petGroup = new THREE.Group();
     {
       const white = new THREE.MeshStandardMaterial({ color: 0xf5f2f0, roughness: 0.9 });
@@ -2253,11 +2228,25 @@
     // watchModelCost (below) steps hi -> lite -> procedural stand-ins if the mounted models drag the frame rate.
     let glbLod = gfxTier === 'lite' ? 'lite' : 'hi';
     const glbMounts = { player: null, praxia: null, val: null };
+    // Val 18 player clips (Nov 13, 2026): Idle / Walk / armatureAction(=Run) ship in val18.glb
+    let playerMixer = null;
+    const playerActions = {};
+    let playerClip = '';
     const modelGuard = { frames: 0, acc: 0, done: false };
     function armModelGuard() { modelGuard.frames = 0; modelGuard.acc = 0; }
 
     function mountPlayerModel(gltf) {
       const model = fitModel(gltf.scene, MODEL_HEIGHT_TALL);
+      // Wire Val's clips: idle by default, walk/run picked in the movement step
+      playerMixer = null;
+      for (const k in playerActions) delete playerActions[k];
+      playerClip = '';
+      if (gltf.animations && gltf.animations.length) {
+        playerMixer = new THREE.AnimationMixer(model);
+        for (const clip of gltf.animations) playerActions[clip.name] = playerMixer.clipAction(clip);
+        const start = playerActions['Idle'] || gltf.animations[0] && playerActions[gltf.animations[0].name];
+        if (start) { start.play(); playerClip = start.getClip().name; }
+      }
       playerGroup.remove(proceduralPlayer);
       if (glbMounts.player) playerGroup.remove(glbMounts.player);
       glbMounts.player = model;
@@ -2318,7 +2307,7 @@
       }, () => { /* no VAL stand-in */ });
     }
     probePlayerModel();
-    probePraxiaModel();
+    // probePraxiaModel() removed Nov 13, 2026: Praxia is out of the scene.
     // probeValModel() NOT called: Val is the player now, no duplicate Val in the pod.
 
     // NWD logo: local GLB converted from the Dropbox letters OBJ
@@ -2327,7 +2316,7 @@
     // player walking up from the deck. Nothing renders if the load fails.
     const logoGroup = new THREE.Group();
     logoGroup.position.set(0, 3.4, -8);
-    worldGroup.add(logoGroup);
+    // Nov 13, 2026 strip: NWD logo removed (worldGroup.add(logoGroup) dropped)
     gltfLoader.load('assets/nwd-logo.glb', (gltf) => {
       const model = gltf.scene;
       const box = new THREE.Box3().setFromObject(model);
@@ -3345,7 +3334,7 @@
           praxiaGroup.position.z = THREE.MathUtils.clamp(praxiaGroup.position.z + (dzp / len) * 0.55, -18, 68);
           if (pd > 28 || performance.now() - praxiaSceneStartedAt > 2600) {
             praxiaGroup.visible = false;
-            praxiaEntry.active = false;
+            // (praxia interactable removed Nov 13, 2026)
             praxiaScene = 'gone';
             praxiaReturnAt = performance.now() + 20000;
           }
@@ -3353,7 +3342,7 @@
       } else if (praxiaScene === 'gone' && performance.now() >= praxiaReturnAt) {
         praxiaGroup.position.set(0, 0, 50);
         praxiaGroup.visible = true;
-        praxiaEntry.active = true;
+        // (praxia interactable removed Nov 13, 2026)
         praxiaScene = 'idle';
       }
 
@@ -3370,6 +3359,17 @@
       const bugDt = Math.min(0.1, (nowMs - (animate.lastBug || nowMs)) / 1000);
       animate.lastBug = nowMs;
       creatureMixers.forEach((m) => m.update(bugDt));
+      if (playerMixer) {
+        const moving = (typeof dx === 'number' && typeof dz === 'number') ? (dx !== 0 || dz !== 0) : false;
+        const want = !moving ? 'Idle' : (state.activeSyncForm === 'GLIDE' ? 'armatureAction' : 'Walk');
+        if (playerActions[want] && playerClip !== want) {
+          const prev = playerActions[playerClip];
+          if (prev) prev.fadeOut(0.18);
+          playerActions[want].reset().fadeIn(0.18).play();
+          playerClip = want;
+        }
+        playerMixer.update(bugDt);
+      }
       skysphere.update(bugDt); // sun rises/sets, clouds drift (NV Skysphere)
       updateBabyPigekPet(t);
       mistTime.value = t * MIST_MOTION;
