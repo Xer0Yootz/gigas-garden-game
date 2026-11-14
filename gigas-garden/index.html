@@ -106,50 +106,38 @@
       gap: 4px;
     }
 
-    .status-canon {
-      font-size: 11px;
-      font-weight: bold;
-      color: var(--cyan);
-      letter-spacing: 0.5px;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
 
-    @media (max-width: 360px) {
-      .status-canon { font-size: 10px; letter-spacing: 0.2px; }
+    /* Compact UI (Nov 13, 2026, User's order): the scrolling status line is
+       REMOVED from the game entirely — no scrolling text in the HUD or on the
+       title screen. Its ONLINE / date / weather data now lives as static text
+       in the diagnostics strip below, collapsed by default behind a one-line
+       summary and expanded with the G key or a tap on the summary. */
+    #diagnostics { font-size: 10px; color: var(--silver); letter-spacing: 0.4px; }
+    #diag-summary {
+      pointer-events: auto; display: flex; justify-content: space-between; gap: 8px;
+      width: 100%; background: none; border: none; padding: 0; cursor: pointer;
+      color: var(--cyan); font: inherit; font-weight: bold; text-align: left; text-transform: uppercase;
     }
+    #diag-summary .diag-key { color: var(--magenta); }
+    #diag-body { padding-top: 4px; display: flex; flex-direction: column; gap: 2px; }
+    #diag-body[hidden] { display: none; }
+    #diag-body .diag-note { opacity: 0.7; }
 
-
-    /* Task 3: scrolling status ticker (HUD + title) */
-    .ticker {
-      overflow: hidden;
-      text-overflow: clip;
-      text-align: left;
-      position: relative;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-              mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    /* Level mini-dock (Nov 13, 2026): 24px tall, labels only, bottom-center of
+       the stage; fades to 30% opacity after 3s idle, back on hover / focus /
+       touch / key activity. This is also the level selector. */
+    #level-dock {
+      pointer-events: auto; position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
+      height: 24px; display: flex; align-items: center; gap: 12px; padding: 0 12px;
+      background: rgba(7, 3, 12, 0.78); border: 1px solid var(--cyan);
+      font-size: 10px; font-weight: bold; letter-spacing: 1px; white-space: nowrap; z-index: 15;
+      transition: opacity 0.6s ease;
     }
-    .ticker-track {
-      display: inline-flex;
-      white-space: nowrap;
-      will-change: transform;
-      animation: nv-ticker var(--ticker-dur, 36s) linear infinite;
-    }
-    .ticker-run { display: inline-flex; align-items: center; padding-right: 2.2em; }
-    .tk-sep { opacity: 0.55; padding: 0 0.7em; }
-    .tk-dot {
-      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-      background: var(--acid); box-shadow: 0 0 6px var(--acid);
-      margin-right: 5px; vertical-align: middle;
-      animation: nv-dot 1.8s ease-in-out infinite;
-    }
-    @keyframes nv-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    @keyframes nv-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
-    .ticker.ticker-static { text-align: center; -webkit-mask-image: none; mask-image: none; }
-    .ticker.ticker-static .ticker-track { animation: none; transform: none; }
-    .title-ticker { font-size: 11px; color: var(--magenta); font-weight: bold; white-space: nowrap; }
+    #level-dock.idle { opacity: 0.3; }
+    #level-dock .dock-current { color: var(--silver); }
+    #level-dock a { color: var(--cyan); text-decoration: none; }
+    #level-dock a:hover, #level-dock a:focus-visible { color: #ffffff; text-decoration: underline; }
+    @media (prefers-reduced-motion: reduce) { #level-dock { transition: none; } }
 
     /* Task 3: Hexa Sigil start control (inline SVG, no text inside the symbol) */
     .sigil-btn {
@@ -175,7 +163,7 @@
       50%      { transform: scale(1.045); opacity: 1; filter: drop-shadow(0 0 5px var(--sigil-a)) drop-shadow(0 0 16px var(--sigil-b)); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .ticker-track, .tk-dot, .sigil-btn svg { animation: none !important; }
+      .sigil-btn svg { animation: none !important; }
     }
 
     /* Lite-tier color grade (used only when the WebGL post stack is off) */
@@ -283,7 +271,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      font-size: 11px;
+      font-size: 10px;
     }
 
     .pill {
@@ -375,9 +363,10 @@
       position: absolute;
       bottom: 12px;
       left: 12px;
-      right: 12px;
-      max-width: 560px;
-      margin: 0 auto;
+      right: auto;
+      width: min(560px, calc(100% - 24px));
+      max-width: 40vw;
+      margin: 0;
       background: var(--panel-black);
       border: 2px solid var(--speaker-accent, var(--cyan));
       box-shadow: 4px 4px 0 var(--amethyst);
@@ -437,6 +426,7 @@
     #dialogue-text.typing::after { content: "\258C"; color: var(--speaker-accent, var(--cyan)); animation: nv-caret 0.6s steps(1) infinite; }
     @keyframes nv-caret { 50% { opacity: 0; } }
     @media (max-width: 420px) { #dialogue-portrait { width: 64px; height: 64px; } }
+    @media (max-width: 700px) { #dialogue-box { max-width: calc(100vw - 24px); } }
     @media (prefers-reduced-motion: reduce) {
       #dialogue-portrait, #dialogue-portrait img, #dialogue-text.typing::after { animation: none !important; }
     }
@@ -576,10 +566,9 @@
   <div id="hud-layer">
     <!-- Top Bar with Exact Locked Status Line -->
     <header class="top-bar">
-      <div class="status-canon ticker" data-ticker role="status" aria-live="off"><div class="ticker-track"><span class="ticker-run">ONLINE</span></div></div>
       <div class="hud-stats-row">
         <div style="display:flex; gap:4px; flex-wrap:wrap;">
-          <span class="pill" id="zone-pill">ZONE: INFINITI 6 DECK</span>
+          <span class="pill" id="zone-pill">ZONE: INFINITY 6 DECK</span>
           <span class="pill" id="hp-pill">INTEGRITY: 100%</span>
           <span class="pill" id="carry-pill">CARRY: 0/10</span>
           <span class="pill" id="pet-pill">PET: BABY PIGEK · FOLLOW · STAGE 1/3</span>
@@ -594,6 +583,17 @@
           <input id="theme-vol" type="range" min="0" max="1" step="0.05" value="0.8" aria-label="Music volume" title="Music volume" style="width:90px; accent-color:#00f0ff;">
         </div>
       </div>
+      <!-- Diagnostics strip (Nov 13, 2026): collapsed by default; G key or tap expands.
+           Carries the date/time + weather the removed scrolling status line used to show. -->
+      <div id="diagnostics">
+        <button id="diag-summary" type="button" aria-expanded="false" aria-controls="diag-body" title="Diagnostics (G)"><span id="diag-summary-text">ONLINE</span><span class="diag-key" aria-hidden="true">DIAGNOSTICS · G</span></button>
+        <div id="diag-body" hidden>
+          <div>DATE / TIME: <span id="diag-date">—</span></div>
+          <div>WEATHER: <span id="diag-weather">WEATHER STANDBY</span></div>
+          <div>POSITION: <span id="diag-coords">POSITION NOT SHARED</span></div>
+          <div class="diag-note">Static diagnostics — no scrolling status line in game.</div>
+        </div>
+      </div>
     </header>
 
     <!-- Center Stage Modals -->
@@ -601,7 +601,6 @@
       <!-- 1. Title & Boot Modal -->
       <section id="title-modal" class="modal-card visible">
         <div class="modal-title">NEON VIGIL // GIGAS GARDEN</div>
-        <div class="status-canon ticker title-ticker" data-ticker role="status" aria-live="off"><div class="ticker-track"><span class="ticker-run">ONLINE</span></div></div>
         <p style="font-size:12px; line-height:1.5; margin:0;">
           Stranded in the Gigas Garden, Earth 5150.
           Wake aboard the bridge, cut the airlock vines, step into the Garden, sync with creatures, and build a refuge around the hull.
@@ -704,6 +703,11 @@
           </div>
         </div>
       </aside>
+      <!-- Level mini-dock (Nov 13, 2026): 24px, labels only, fades when idle. Also the level selector. -->
+      <nav id="level-dock" aria-label="Level select">
+        <span class="dock-current" aria-current="page">⬡ LEVEL 1 · INFINITY 6</span>
+        <a href="level-2/">LEVEL 2 · GIGAS GARDEN</a>
+      </nav>
     </main>
 
     <!-- Bottom Controls: Touch D-Pad + Contextual Actions -->
@@ -731,15 +735,18 @@
   </div>
 
   <script>
-    /* Task 3: status ticker. Order: ONLINE | day month time | weather.
-       Weather is requested only after the sigil tap (user gesture). Every failure path is silent
-       and falls back to WEATHER OFFLINE; nothing here can block the game start. */
+    /* Diagnostics status (compact UI, Nov 13, 2026): the scrolling status line
+       that used to run across the HUD and the title screen is removed. Its
+       ONLINE / date / weather data lives on as static text in the diagnostics
+       strip in the top bar — collapsed behind a one-line summary, expanded
+       with the G key or by tapping the summary. Weather is requested only
+       after the sigil tap (user gesture). Every failure path is silent and
+       falls back to WEATHER OFFLINE; nothing here can block the game start. */
     (function () {
       var WEATHER_REFRESH_MS = 15 * 60 * 1000;
       var GEO_TIMEOUT_MS = 8000, GEO_HARD_MS = 10000, FETCH_TIMEOUT_MS = 8000;
-      var reduceMq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
       var weatherText = 'WEATHER STANDBY';
-      var coords = null, weatherTimer = null, rotateTimer = null, rotateIdx = 0, requested = false;
+      var coords = null, weatherTimer = null, requested = false;
 
       function locale() { return (navigator.languages && navigator.languages[0]) || navigator.language || 'en-US'; }
       function useFahrenheit() {
@@ -763,44 +770,28 @@
         for (var i = 0; i < WMO.length; i++) if (code <= WMO[i][0]) return WMO[i][1];
         return 'SKY UNKNOWN';
       }
-      function segments() {
-        return [dateText(), weatherText];
-      }
-      function onlineHtml() { return '<span class="tk-dot" aria-hidden="true"></span>ONLINE'; }
-      function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-      function runHtml() {
-        var parts = [onlineHtml()].concat(segments().map(esc));
-        return parts.join('<span class="tk-sep" aria-hidden="true">|</span>') + '<span class="tk-sep" aria-hidden="true">|</span>';
-      }
+      function el(id) { return document.getElementById(id); }
       function render() {
-        var stat = !!(reduceMq && reduceMq.matches);
-        var label = 'ONLINE. ' + segments().join('. ');
-        document.querySelectorAll('[data-ticker]').forEach(function (el) {
-          var track = el.querySelector('.ticker-track');
-          el.classList.toggle('ticker-static', stat);
-          el.setAttribute('aria-label', label);
-          if (stat) {
-            var rot = segments().map(esc);
-            track.innerHTML = '<span class="ticker-run">' + onlineHtml() + '<span class="tk-sep" aria-hidden="true">|</span>' + rot[rotateIdx % rot.length] + '</span>';
-          } else {
-            var one = runHtml(), run = one;
-            track.innerHTML = '<span class="ticker-run">' + one + '</span>';
-            var w1 = track.firstChild.getBoundingClientRect().width || 600, cw = el.clientWidth || 0;
-            for (var n = 1; n < 6 && w1 * n < cw; n++) run += one; // fill wide screens so the loop never shows a gap
-            track.innerHTML = '<span class="ticker-run">' + run + '</span><span class="ticker-run" aria-hidden="true">' + run + '</span>';
-            var w = track.firstChild.getBoundingClientRect().width || 600;
-            track.style.setProperty('--ticker-dur', Math.max(14, w / 38).toFixed(1) + 's');
-          }
-        });
+        var now = dateText();
+        var sum = el('diag-summary-text'); if (sum) sum.textContent = 'ONLINE · ' + now + ' · ' + weatherText;
+        var dEl = el('diag-date'); if (dEl) dEl.textContent = now;
+        var wEl = el('diag-weather'); if (wEl) wEl.textContent = weatherText;
+        var cEl = el('diag-coords');
+        if (cEl) cEl.textContent = coords ? ('LAT ' + coords.latitude.toFixed(3) + ' · LON ' + coords.longitude.toFixed(3)) : 'POSITION NOT SHARED';
       }
       function scheduleClock() {
         var now = new Date();
         setTimeout(function () { render(); scheduleClock(); }, (60 - now.getSeconds()) * 1000 - now.getMilliseconds() + 50);
       }
-      function setRotation() {
-        clearInterval(rotateTimer); rotateTimer = null;
-        if (reduceMq && reduceMq.matches) rotateTimer = setInterval(function () { rotateIdx++; render(); }, 3500);
-        render();
+      function setOpen(open) {
+        var body = el('diag-body'), btn = el('diag-summary');
+        if (!body || !btn) return;
+        body.hidden = !open;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      function toggleDiagnostics() {
+        var body = el('diag-body');
+        if (body) setOpen(body.hidden);
       }
       function timedFetchJson(url) {
         var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
@@ -822,8 +813,8 @@
         Promise.all([wx, place]).then(function (res) {
           var cur = res[0] && res[0].current;
           if (!cur || typeof cur.temperature_2m !== 'number') throw new Error('no data');
-          var txt = Math.round(cur.temperature_2m) + '\u00B0' + (f ? 'F' : 'C') + ' ' + condition(cur.weather_code);
-          if (res[1]) txt += ' \u00B7 ' + String(res[1]).toUpperCase();
+          var txt = Math.round(cur.temperature_2m) + '°' + (f ? 'F' : 'C') + ' ' + condition(cur.weather_code);
+          if (res[1]) txt += ' · ' + String(res[1]).toUpperCase();
           weatherText = txt; render();
         }).catch(offline);
       }
@@ -842,9 +833,33 @@
           }, { enableHighAccuracy: false, timeout: GEO_TIMEOUT_MS, maximumAge: WEATHER_REFRESH_MS });
         } catch (e) { offline(); }
       }
-      if (reduceMq) { (reduceMq.addEventListener ? reduceMq.addEventListener('change', setRotation) : reduceMq.addListener(setRotation)); }
-      window.NVTicker = { requestWeather: requestWeather, render: render, state: function () { return { weatherText: weatherText, coords: coords }; } };
-      setRotation(); scheduleClock();
+      window.NVDiag = { requestWeather: requestWeather, toggleDiagnostics: toggleDiagnostics, state: function () { return { weatherText: weatherText, coords: coords }; } };
+      var btn = el('diag-summary');
+      if (btn) btn.addEventListener('click', toggleDiagnostics);
+      window.addEventListener('keydown', function (e) {
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+        if (e.code === 'KeyG' && !e.metaKey && !e.ctrlKey && !e.altKey) toggleDiagnostics();
+      });
+      render(); scheduleClock();
+    })();
+  </script>
+  <script>
+    /* Level mini-dock idle fade (Nov 13, 2026): the dock drops to 30% opacity
+       after 3s without pointer / touch / key activity; any activity wakes it. */
+    (function () {
+      var dock = document.getElementById('level-dock');
+      if (!dock) return;
+      var timer = null;
+      function wake() {
+        dock.classList.remove('idle');
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () { dock.classList.add('idle'); }, 3000);
+      }
+      ['pointermove', 'pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
+        window.addEventListener(ev, wake, { passive: true });
+      });
+      wake();
     })();
   </script>
   <script type="module">
@@ -1182,7 +1197,7 @@
     });
 
     /* =========================================================================
-       5. THREE.JS WORLD: INFINITI 6 + GIGAS GARDEN + BACKDROP PLATES
+       5. THREE.JS WORLD: INFINITY 6 + GIGAS GARDEN + BACKDROP PLATES
        ========================================================================= */
     const container = document.getElementById('viewport-container');
     const scene = new THREE.Scene();
@@ -2651,7 +2666,7 @@
       for (const m of rollingMistLayers) if (m.userData.hiOnly) m.visible = gfxTier === 'hi';
       document.body.classList.toggle('nv-outside', !insideShip);
       document.getElementById('zone-pill').textContent = insideShip
-        ? 'ZONE: INFINITI 6 DECK'
+        ? 'ZONE: INFINITY 6 DECK'
         : (playerGroup.position.z > 52 ? 'ZONE: SUTRO BATHS' : 'ZONE: GIGAS GARDEN');
 
       const carryMax = state.baseCarry + state.syncedCounts.HAULER * 2 + state.builds.filter(b => b.kind === 'crate').length * 2;
@@ -2847,7 +2862,7 @@
         HostSDK.ready();
         queueDialogue(BOOT_DIALOGUE);
         // Weather lookup rides this tap (user gesture) but is fully async and never blocks the start.
-        try { if (window.NVTicker) window.NVTicker.requestWeather(); } catch (e) { /* ticker stays on WEATHER OFFLINE */ }
+        try { if (window.NVDiag) window.NVDiag.requestWeather(); } catch (e) { /* diagnostics stay on WEATHER OFFLINE */ }
       },
 
       advanceDialogue() {
