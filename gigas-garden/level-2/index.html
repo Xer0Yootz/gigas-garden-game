@@ -105,8 +105,28 @@
       font-family: "Courier New", Courier, monospace; color: #ffd7e8;
       background: rgba(20, 4, 24, 0.72); border: 1px solid rgba(255, 94, 138, 0.45);
       padding: 10px 12px; max-width: 360px; pointer-events: none;
-      font-size: 12px; line-height: 1.55;
+      font-size: 10px; line-height: 1.55;
     }
+    /* Diagnostics collapse (Nov 13, 2026): the HUD readout is collapsed by
+       default behind its one-line summary; G key or the summary toggles it. */
+    #hud-toggle {
+      pointer-events: auto; background: none; border: none; padding: 0; cursor: pointer;
+      color: #fff; font: inherit; font-weight: bold; letter-spacing: 1px; text-align: left;
+    }
+    #hud-body[hidden] { display: none; }
+    /* Level mini-dock (Nov 13, 2026): 24px, labels only, bottom-center; fades
+       to 30% opacity after 3s idle. Also the level selector. */
+    #level-dock {
+      position: fixed; left: 50%; bottom: 8px; transform: translateX(-50%); z-index: 10;
+      height: 24px; display: flex; align-items: center; gap: 12px; padding: 0 12px;
+      background: rgba(20, 4, 24, 0.78); border: 1px solid rgba(255, 94, 138, 0.45);
+      font-family: "Courier New", Courier, monospace; font-size: 10px; font-weight: bold;
+      letter-spacing: 1px; white-space: nowrap; transition: opacity 0.6s ease;
+    }
+    #level-dock.idle { opacity: 0.3; }
+    #level-dock .dock-current { color: #ffd7e8; }
+    #level-dock a { color: #19e3ff; text-decoration: none; }
+    #level-dock a:hover, #level-dock a:focus-visible { color: #fff; text-decoration: underline; }
     #hud b { color: #fff; letter-spacing: 1px; }
     #hud .dim { color: #c98aa8; }
     #hud .warn { color: #ffb020; }
@@ -115,7 +135,7 @@
       position: fixed; bottom: 12px; right: 12px; z-index: 10;
       font-family: "Courier New", Courier, monospace; color: #c98aa8;
       background: rgba(20, 4, 24, 0.72); border: 1px solid rgba(255, 94, 138, 0.3);
-      padding: 6px 10px; font-size: 11px; pointer-events: none;
+      padding: 6px 10px; font-size: 10px; pointer-events: none;
     }
     #err {
       display: none; position: fixed; top: 12px; right: 12px; z-index: 20;
@@ -128,7 +148,8 @@
 <body>
   <div id="app"></div>
   <div id="hud">
-    <b>GIGAS GARDEN — LEVEL 2</b><br />
+    <button id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud-body" title="Diagnostics (G)">GIGAS GARDEN — LEVEL 2 · DIAGNOSTICS (G)</button>
+    <div id="hud-body" hidden>
     Empty garden shell — outdoor, not black<br />
     <span class="dim">Crash site: hull on the beach, cliff base, tree line</span><br />
     <span class="cyan">Pink sun: striped disc — rises/sets, drives the light dawn→dusk*</span><br />
@@ -137,6 +158,7 @@
     <span class="dim">Slots: ground (Sickle Coast) · tree line · cliff · hull — see record</span><br />
     <span class="dim">Ground: ocean-water GIF stand-in (temporary blue water, 25% transparent over a seabed)</span><br />
     <span class="dim">Drag to orbit · scroll to zoom · no systems yet</span>
+    </div>
   </div>
   <div id="scale">Hull 110 m × 45 m × 20–30 m · sky dome 10× world (~32 km) · *sun identity pending her word</div>
   <div id="err"></div>
@@ -579,6 +601,43 @@
       }
     }
     tick();
+  </script>
+  <!-- Level mini-dock (Nov 13, 2026): 24px, labels only, fades when idle. Also the level selector. -->
+  <nav id="level-dock" aria-label="Level select">
+    <a href="../">LEVEL 1 · INFINITY 6</a>
+    <span class="dock-current" aria-current="page">⬡ LEVEL 2 · GIGAS GARDEN</span>
+  </nav>
+  <script>
+    /* Compact UI (Nov 13, 2026): diagnostics collapse toggle (button + G key)
+       and the level mini-dock idle fade (30% after 3s idle). */
+    (function () {
+      var body = document.getElementById('hud-body');
+      var btn = document.getElementById('hud-toggle');
+      function toggle() {
+        if (!body || !btn) return;
+        body.hidden = !body.hidden;
+        btn.setAttribute('aria-expanded', body.hidden ? 'false' : 'true');
+      }
+      if (btn) btn.addEventListener('click', toggle);
+      window.addEventListener('keydown', function (e) {
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+        if (e.code === 'KeyG' && !e.metaKey && !e.ctrlKey && !e.altKey) toggle();
+      });
+      var dock = document.getElementById('level-dock');
+      if (dock) {
+        var timer = null;
+        var wake = function () {
+          dock.classList.remove('idle');
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(function () { dock.classList.add('idle'); }, 3000);
+        };
+        ['pointermove', 'pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
+          window.addEventListener(ev, wake, { passive: true });
+        });
+        wake();
+      }
+    })();
   </script>
 </body>
 </html>
