@@ -123,7 +123,7 @@
     }
 
 
-    /* Task 3: scrolling status ticker (HUD + title) */
+    /* Task 3: scrolling status ticker (HUD top bar) */
     .ticker {
       overflow: hidden;
       text-overflow: clip;
@@ -150,7 +150,6 @@
     @keyframes nv-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
     .ticker.ticker-static { text-align: center; -webkit-mask-image: none; mask-image: none; }
     .ticker.ticker-static .ticker-track { animation: none; transform: none; }
-    .title-ticker { font-size: 18px; color: var(--magenta); font-weight: bold; white-space: nowrap; }
 
     /* Task 3: Hexa Sigil start control (inline SVG, no text inside the symbol) */
     .sigil-btn {
@@ -609,7 +608,6 @@
       <!-- 1. Title & Boot Modal -->
       <section id="title-modal" class="modal-card visible">
         <div class="modal-title">NEON VIGIL // GIGAS GARDEN</div>
-        <div class="status-canon ticker title-ticker" data-ticker role="status" aria-live="off"><div class="ticker-track"><span class="ticker-run">ONLINE</span></div></div>
         <p style="font-size: 18px; line-height:1.5; margin:0;">
           Stranded in the Gigas Garden, Earth 5150.
           Wake aboard the bridge, cut the airlock vines, step into the Garden, sync with creatures, and build a refuge around the hull.
