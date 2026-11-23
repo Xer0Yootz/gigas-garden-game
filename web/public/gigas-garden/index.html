@@ -893,6 +893,7 @@
   </script>
   <script type="module">
     import * as THREE from 'three';
+    import { createGardenLife } from './garden-life.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -1591,6 +1592,8 @@
     // Everything stays outside the walk corridor (|x| <= 18, z -2..70) and off the follow-camera path.
     const gardenScenery = new THREE.Group();
     gardenPlates.add(gardenScenery);
+    // Ambient code-born fauna: prototype only, no gameplay or canon registrations.
+    const gardenLife = createGardenLife(THREE, gardenScenery, { lite: gfxTier === 'lite' });
     const sceneryRand = (() => { let s = 90210; return () => { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
 
     // Basalt column clusters: one instanced hex prism (base at y = 0), scaled per column
@@ -3342,6 +3345,7 @@
       const bugDt = Math.min(0.1, (nowMs - (animate.lastBug || nowMs)) / 1000);
       animate.lastBug = nowMs;
       creatureMixers.forEach((m) => m.update(bugDt));
+      gardenLife.update(bugDt, { active: state.viewMode === 'GARDEN' && playerGroup.position.z >= 0, lite: gfxTier === 'lite' });
       mistTime.value = t * MIST_MOTION;
       if (mistGroup.visible) {
         for (const m of mistGroup.children) m.position.x = m.userData.baseX + Math.sin(t * 0.25 + m.userData.phase) * 2.2;
