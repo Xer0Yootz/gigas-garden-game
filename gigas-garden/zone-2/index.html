@@ -145,6 +145,7 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { createSkysphere, SKY_RADIUS, CAMERA_FAR } from './nv-skysphere.js';
+    import { createLayoutHost, openEditor } from '../nv-layout.js';
 
     const errBox = document.getElementById('err');
     function fail(msg) {
@@ -562,7 +563,9 @@
     let frames = 0;
     function tick() {
       requestAnimationFrame(tick);
-      skysphere.update(clock.getDelta());
+      const dt = clock.getDelta();
+      skysphere.update(dt);
+      layoutHost.update(dt);
       controls.update();
       renderer.render(scene, camera);
       if (++frames === 5) {
@@ -578,6 +581,16 @@
         }));
       }
     }
+    const layoutHost = createLayoutHost(THREE);
+    window.__worldLayout = layoutHost;
+    layoutHost.view = { THREE, camera, renderer, scene, controls, manifestUrl: './assets/manifest.json' };
+    layoutHost.load('zone-2', { scene });
+    openEditor({
+      zone: 'zone-2',
+      host: layoutHost,
+      THREE, camera, renderer, scene, controls,
+      manifestUrl: './assets/manifest.json',
+    });
     tick();
   </script>
 </body>

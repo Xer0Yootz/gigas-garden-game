@@ -150,6 +150,7 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { createSkysphere, CAMERA_FAR } from '../zone-2/nv-skysphere.js';
+    import { createLayoutHost, openEditor } from '../nv-layout.js';
     import { Reflector } from 'three/addons/objects/Reflector.js';
 
     const errBox = document.getElementById('err');
@@ -185,6 +186,10 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
+
+    const layoutHost = createLayoutHost(THREE);
+    window.__worldLayout = layoutHost;
+    layoutHost.view = { THREE, camera, renderer, scene, controls, manifestUrl: './assets/manifest.json' };
 
     // --- Lights: lore-grounded ship lighting (Nov 9 rework) ------------------
     // Bible/dossier language only: thin cyan-teal emissive trim is the
@@ -331,6 +336,7 @@
     bridge.position.set(27, 18, 0);
     bridge.rotation.y = -Math.PI / 2;
     scene.add(bridge);
+    layoutHost.register('bridge', bridge, { file: 'infinity6-bridge-clean-2026-11-10.glb' });
     const bridgeStatus = { loaded: false, error: null, file: 'infinity6-bridge-clean-2026-11-10.glb', md5: '9e27236d4e6fdc4462babe61d2e5e539', pos: [27, 18, 0], rotY: -Math.PI / 2, ceiling: 11, consoleScale: 'x30' };
     new GLTFLoader().load('./assets/infinity6-bridge-clean-2026-11-10.glb', (gltf) => {
       const model = gltf.scene;
@@ -339,6 +345,7 @@
       const center = new THREE.Vector3(); box.getCenter(center);
       model.position.set(-center.x, -box.min.y, -center.z);
       bridge.add(model);
+      layoutHost.bindClips('bridge', gltf.animations, model);
       bridgeStatus.loaded = true;
       bridgeStatus.rawSize = [size.x, size.y, size.z];
       console.log('[bridge] clean bridge mounted', JSON.stringify({
@@ -372,6 +379,7 @@
       avatar.position.set(27, 18.6, -1.8);
       avatar.rotation.y = Math.PI / 2;
       scene.add(avatar);
+      layoutHost.register('avatar', avatar, { file: 'placeholder-avatar-neon-bald-test.glb', clips: gltf.animations, mixerRoot: avatar });
       avatarStatus.loaded = true;
       console.log('[avatar] placeholder avatar mounted (BALD, TEST ONLY, not canon)', JSON.stringify(avatarStatus));
     }, undefined, (err) => {
@@ -1666,6 +1674,7 @@
     stasisGroup.position.set(24, 2, 0);
     stasisGroup.rotation.y = -Math.PI / 2;
     scene.add(stasisGroup);
+    layoutHost.register('stasis', stasisGroup, { file: 'stasis-chamber-room.glb' });
     new GLTFLoader().load('./assets/stasis-chamber-room.glb', (gltf) => {
       const model = gltf.scene;
       const box = new THREE.Box3().setFromObject(model);
@@ -1675,6 +1684,7 @@
       model.scale.setScalar(s);
       model.position.set(-center.x * s, -box.min.y * s, -center.z * s);
       stasisGroup.add(model);
+      layoutHost.bindClips('stasis', gltf.animations, model);
       stasisStatus.loaded = true;
       stasisStatus.scale = s;
       console.log('[stasis] chamber mounted', JSON.stringify({
@@ -1787,6 +1797,7 @@
       controls.update();
       // Sky: advance the sun + drift the clouds (10 min per full sweep).
       sky.update(1 / 60);
+      layoutHost.update(1 / 60);
       // Lounge reactor pulse (visual only, no systems): the purple lounge
       // light breathes with the reactor — a locked lounge property.
       loungeLight.intensity = 60 + 14 * Math.sin(frames * 0.02);
@@ -1805,6 +1816,13 @@
         }));
       }
     }
+    layoutHost.load('zone-1', { scene });
+    openEditor({
+      zone: 'zone-1',
+      host: layoutHost,
+      THREE, camera, renderer, scene, controls,
+      manifestUrl: './assets/manifest.json',
+    });
     tick();
   </script>
 </body>

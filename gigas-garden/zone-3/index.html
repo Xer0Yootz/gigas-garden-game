@@ -63,6 +63,7 @@
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import { createSkysphere, CAMERA_FAR } from '../zone-2/nv-skysphere.js';
+    import { createLayoutHost, openEditor } from '../nv-layout.js';
 
     const errBox = document.getElementById('err');
     function fail(msg) {
@@ -162,6 +163,10 @@
       };
     }
 
+    const layoutHost = createLayoutHost(THREE);
+    window.__worldLayout = layoutHost;
+    layoutHost.view = { THREE, camera, renderer, scene, controls, manifestUrl: './assets/manifest.json' };
+
     const ruinStatus = {};
     for (const spec of RUINS) {
       ruinStatus[spec.id] = { file: spec.file, loaded: false, error: null, scale: SCALE, position: null, center: null, size: null };
@@ -180,6 +185,11 @@
         });
         gltf.scene.name = spec.id;
         scene.add(gltf.scene);
+        layoutHost.register(spec.file + '#0', gltf.scene, {
+          file: spec.file,
+          clips: gltf.animations,
+          mixerRoot: gltf.scene,
+        });
         const status = ruinStatus[spec.id];
         status.loaded = true;
         status.position = placed.position;
@@ -229,7 +239,9 @@
     let reported = false;
     function tick() {
       requestAnimationFrame(tick);
-      skysphere.update(clock.getDelta());
+      const dt = clock.getDelta();
+      skysphere.update(dt);
+      layoutHost.update(dt);
       controls.update();
       renderer.render(scene, camera);
       frames++;
@@ -248,6 +260,13 @@
         }));
       }
     }
+    layoutHost.load('zone-3', { scene });
+    openEditor({
+      zone: 'zone-3',
+      host: layoutHost,
+      THREE, camera, renderer, scene, controls,
+      manifestUrl: './assets/manifest.json',
+    });
     tick();
   </script>
 </body>
