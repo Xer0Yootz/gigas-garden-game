@@ -547,7 +547,11 @@
     }
     #nv-cam-reset.detached { border-color: var(--magenta); color: var(--magenta); box-shadow: 0 0 10px rgba(255,30,138,0.6); }
   </style>
-<style>#hud-layer, #chat-modal { display: none !important; }</style>
+<style>
+#hud-layer, #chat-modal { display: none !important; }
+#nv-touch { display: block !important; }
+#nv-touch.nv-hidden { display: block !important; }
+</style>
 </head>
 <body>
 
@@ -2388,7 +2392,7 @@
        ========================================================================= */
     const playerGroup = new THREE.Group();
     playerGroup.position.set(0, 0, -16);
-    scene.add(playerGroup);
+    scene.add(playerGroup); playerGroup.visible = false; // land view: no character (User, Nov 23)
 
     /* =========================================================================
        BABY PIGEK PET PROTOTYPE (Oct 28, 2026) — baby stage only.
@@ -2440,7 +2444,7 @@
       }
     }
     petGroup.position.set(1.5, 0, -14);
-    scene.add(petGroup);
+    scene.add(petGroup); petGroup.visible = false; // land view: no pet (User, Nov 23)
     function updateBabyPigekPet(t) {
       const pill = document.getElementById('pet-pill');
       petGroup.visible = petState.enabled;
@@ -3997,5 +4001,9 @@
     animate();
   </script>
 <script type="module" src="./game-main.ts"></script>
+<script>
+// Land view: keep the touch controls on (User, Nov 23)
+(function(){ var n=0; function on(){ document.documentElement.classList.add("nv-touch-ui"); var t=document.getElementById("nv-touch"); if(t) t.classList.remove("nv-hidden"); } on(); var iv=setInterval(function(){ on(); if(++n>20) clearInterval(iv); }, 500); window.addEventListener("pointerdown", on, true); })();
+</script>
 </body>
 </html>
