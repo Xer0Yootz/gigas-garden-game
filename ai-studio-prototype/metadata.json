@@ -1,0 +1,6 @@
+{
+  "name": "Ring Vessel — WebGPU Scene Prototype",
+  "description": "A Three.js WebGPU look prototype featuring a lone ring-shaped spaceship on a vast teal water plain under a pink-to-red sky with a large striped sun, with bridge interior and exterior views.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
