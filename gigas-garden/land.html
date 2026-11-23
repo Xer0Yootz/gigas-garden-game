@@ -1363,6 +1363,26 @@
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
 
+    // Land view additions (User, Nov 23): the actual Infinity 6 + the ruins
+    function addProp(url, targetLen, x, z, ry) {
+      gltfLoader.load(url, (gltf) => {
+        const inner = gltf.scene;
+        const box = new THREE.Box3().setFromObject(inner);
+        const size = box.getSize(new THREE.Vector3());
+        const c = box.getCenter(new THREE.Vector3());
+        const s = targetLen / (Math.max(size.x, size.z) || 1);
+        inner.position.set(-c.x, -box.min.y, -c.z);
+        const wrap = new THREE.Group();
+        wrap.add(inner);
+        wrap.scale.setScalar(s);
+        wrap.position.set(x, 0, z);
+        wrap.rotation.y = ry || 0;
+        worldGroup.add(wrap);
+      }, undefined, () => {});
+    }
+    addProp('assets/infinity6-ship.glb', 34, 26, 96, -0.5);
+    addProp('assets/ruins-megastructures.glb', 20, -24, 44, 0.7);
+
     // Zone 1: Infinity 6 Interior Deck & Ramp (z: -18 to 0) — Zero pink fog inside
     const deckFloor = new THREE.Mesh(
       new THREE.BoxGeometry(14, 0.5, 20),
