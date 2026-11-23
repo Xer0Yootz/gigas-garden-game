@@ -859,10 +859,14 @@
     import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import { createSkysphere } from './nv-skysphere.js';
+    import { MY_ROOM_HREF } from './nv-room-entry.js';
 
     /* =========================================================================
        1. ASSET MANIFESTS FOR GROK BOT & FLOW STUDIO PIPELINE
        ========================================================================= */
+    const roomLink = document.getElementById('console-room');
+    if (roomLink) roomLink.href = MY_ROOM_HREF;
+
     const FLOW_STUDIO_MANIFEST = {
       // Flow Studio exports, web-optimized (meshopt + quantized mesh, WebP textures, Y-up, facing +z, feet at y = 0).
       // The -lite copies are lower LOD (fewer triangles, 1024 px base color, no normal map) for the lite tier.
