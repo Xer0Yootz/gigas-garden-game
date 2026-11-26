@@ -3675,5 +3675,32 @@
     animate();
   </script>
 <script type="module" src="./game-main.ts"></script>
+<script>
+// nv-weather-agent — Lab drop-in snippet. Live worker: https://nv-weather-agent.bookings-8be.workers.dev
+// Every 15 minutes it asks the weather agent for the current real-world
+// weather state (clear / rain / snow / storm), puts it on window.NVWeather,
+// fires a 'nv:weather' event, and sets a data-weather attribute on the page.
+// It does NOT change the sky itself.
+(function () {
+  var WORKER_URL = 'https://nv-weather-agent.bookings-8be.workers.dev';
+  var REFRESH_MS = 15 * 60 * 1000;
+  function apply(record) {
+    if (!record || !record.state) return;
+    window.NVWeather = record;
+    window.NVWeatherPreset = record.cloudPreset;
+    try { document.documentElement.setAttribute('data-weather', record.state); } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent('nv:weather', { detail: record })); } catch (e) {}
+  }
+  function pull() {
+    if (!window.fetch || WORKER_URL.indexOf('YOUR-SUBDOMAIN') !== -1) return;
+    fetch(WORKER_URL + '/weather-state', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(apply)
+      .catch(function () { /* silent: the Lab keeps its last sky on any failure */ });
+  }
+  pull();
+  setInterval(pull, REFRESH_MS);
+})();
+</script>
 </body>
 </html>
